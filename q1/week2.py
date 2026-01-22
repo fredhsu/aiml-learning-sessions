@@ -1,8 +1,7 @@
-from collections.abc import Callable
 import math
 import random
+from collections.abc import Callable
 from typing import Self, override
-
 
 # Week 2 Session 2:
 # Add a very thin Vector/Tensor convenience layer (array of Values) for dot products.
@@ -34,8 +33,11 @@ class Value:
     def __repr__(self):
         return f"label: {self.label} data: {self.data}, grad: {self.grad}, prev: {self._prev}"
 
-    def __add__(self, other: Self):
-        out = Value(data=self.data + other.data, prev=[self, other], label="+")
+    def __add__(self, other: float | int | Self):
+        other_value = other if isinstance(other, Value) else Value(float(other), [], "")
+        out = Value(
+            data=self.data + other_value.data, prev=[self, other_value], label="+"
+        )
 
         def _backward():
             self.grad += out.grad
@@ -45,7 +47,10 @@ class Value:
         return out
 
     def __mul__(self, other: Self):
-        out = Value(data=self.data * other.data, prev=[self, other], label="*")
+        other_value = other if isinstance(other, Value) else Value(float(other), [], "")
+        out = Value(
+            data=self.data * other_value.data, prev=[self, other_value], label="*"
+        )
 
         def _backward():
             self.grad += other.data * out.grad
@@ -54,8 +59,9 @@ class Value:
         out._backward = _backward
         return out
 
-    def __div__(self, other: Self):
-        return self * other**-1
+    def __truediv__(self, other: Self):
+        other_value = other if isinstance(other, Value) else Value(float(other), [], "")
+        return self * other_value**-1
 
     def __pow__(self, other: int):
         out = Value(data=self.data**other, prev=[self], label="^")
@@ -66,7 +72,7 @@ class Value:
         out._backward = _backward
         return out
 
-    def __exp__(self):
+    def exp(self):
         out = Value(data=math.exp(self.data), prev=[self], label="exp")
 
         def _backward():
@@ -75,7 +81,7 @@ class Value:
         out._backward = _backward
         return out
 
-    def __log__(self):
+    def log(self):
         out = Value(data=math.log(self.data), prev=[self], label="log")
 
         def _backward():
@@ -89,7 +95,7 @@ class Value:
         out = Value(out, [self], label="relu")
 
         def _backward():
-            self.grad += (out.data > 0) * out.grad
+            self.grad += (self.data > 0) * out.grad
 
         out._backward = _backward
 
@@ -136,8 +142,8 @@ class Value:
         return self * Value(-1, [], label="neg")
 
     def __sub__(self, other: Self):
-        out = self.data - other.data
-        out = Value(out, [self, other], label="-")
+        other_value = other if isinstance(other, Value) else Value(float(other), [], "")
+        out = Value(self.data - other_value.data, [self, other], label="-")
 
         def _backward():
             self.grad += out.grad
@@ -148,9 +154,6 @@ class Value:
 
     def __radd__(self, other: Self):
         return other + self
-
-    def __iadd__(self, other: Self):
-        return self + self + other
 
 
 type Vector = list[Value]
