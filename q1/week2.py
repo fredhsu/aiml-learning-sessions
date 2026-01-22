@@ -41,25 +41,25 @@ class Value:
 
         def _backward():
             self.grad += out.grad
-            other.grad += out.grad
+            other_value.grad += out.grad
 
         out._backward = _backward
         return out
 
-    def __mul__(self, other: Self):
+    def __mul__(self, other: float | int | Self):
         other_value = other if isinstance(other, Value) else Value(float(other), [], "")
         out = Value(
             data=self.data * other_value.data, prev=[self, other_value], label="*"
         )
 
         def _backward():
-            self.grad += other.data * out.grad
-            other.grad += self.data * out.grad
+            self.grad += other_value.data * out.grad
+            other_value.grad += self.data * out.grad
 
         out._backward = _backward
         return out
 
-    def __truediv__(self, other: Self):
+    def __truediv__(self, other: float | int | Self):
         other_value = other if isinstance(other, Value) else Value(float(other), [], "")
         return self * other_value**-1
 
@@ -141,18 +141,18 @@ class Value:
     def __neg__(self):
         return self * Value(-1, [], label="neg")
 
-    def __sub__(self, other: Self):
+    def __sub__(self, other: float | int | Self):
         other_value = other if isinstance(other, Value) else Value(float(other), [], "")
-        out = Value(self.data - other_value.data, [self, other], label="-")
+        out = Value(self.data - other_value.data, [self, other_value], label="-")
 
         def _backward():
             self.grad += out.grad
-            other.grad -= out.grad  # Fixed: subtraction gradient
+            other_value.grad -= out.grad  # Fixed: subtraction gradient
 
         out._backward = _backward
         return out
 
-    def __radd__(self, other: Self):
+    def __radd__(self, other: float | int | Self):
         return other + self
 
 
