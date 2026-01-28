@@ -271,48 +271,53 @@ class MLP:
         return x
 
 
-def mini_batch(mlp: MLP, xs, ys, bs=4):
+def mini_batch(mlp: MLP, xs, ys, bs=4, learning_rate=0.1):
     # 2. Add mini-batch support (minimal version):
     #    - Either loop samples and accumulate grads, or average loss over batch then backprop once (depending on your design).
     total_set = zip(xs, ys)
-    batches = batched(total_set, bs)
-
-    for batch in batches:
+    batches = list(batched(total_set, bs))
+    total_loss = 0.0
+    for i, batch in enumerate(batches):
+        batch_loss = Value(0.0, [], "loss")
         for xs, y in batch:
             xs = [Value(x, [], "x") for x in xs]
             # ys = [[0], [1], [0], [1]]
-            out = mlp(xs)
+            logits = mlp(xs)
             # get cross entropy loss
-            # loss = (out[0] - Value(ys, [], "y")).square()  # loss is MSE
-            # print(f"\nloss: {loss.data}")
+            loss = cross_entropy_from_logits(logits, y)
+            batch_loss = batch_loss + loss
             # zero all gradients
-            for layer in layers:
-                layer.zero_gradients()
-            loss.backward()
-            # update
-            for layer in layers:
-                for p in layer.parameters():
-                    # print(f"previous: {p.data}")
-                    p.data -= p.grad * learning_rate
-                    # print(f"updated: {p.data}")
+        for layer in mlp.layers:
+            layer.zero_gradients()
+        batch_loss = batch_loss / len(batch)  # average loss
+        print(f"batch {i}: loss: {batch_loss.data}")
+        batch_loss.backward()
+        # update
+        for layer in mlp.layers:
+            for p in layer.parameters():
+                p.data -= p.grad * learning_rate
+        total_loss += batch_loss.data
+    return total_loss
 
 
-def w2_numerical_grad():
-    layers = [create_layer(2, 4), create_layer(4, 1, non_lin="sigmoid")]
-    mlp = MLP(layers)
-
+def w3_numerical_grad(mlp):
     eps = 1e-4
     input_data = [0, 1]
     target = 1
 
+    # Zero all gradients first to start fresh
+    for layer in mlp.layers:
+        layer.zero_gradients()
+
     # First forward pass to get analytical gradient
     xs = [Value(x, [], "x") for x in input_data]
-    out = mlp(xs)
-    loss = (out[0] - Value(target, [], "y")).square()
+    logits = mlp(xs)  # Vector of length K
+    loss = cross_entropy_from_logits(logits, target)
+
     loss.backward()
 
     # Store the analytical gradient and weight value
-    weight_to_check = mlp.layers[0].parameters()[4]
+    weight_to_check = mlp.layers[1].parameters()[2]
     analytical_gradient = weight_to_check.grad
     original_weight_value = weight_to_check.data
 
@@ -323,13 +328,13 @@ def w2_numerical_grad():
     weight_to_check.data = original_weight_value + eps
     xs_plus = [Value(x, [], "x") for x in input_data]  # Fresh values
     out_plus = mlp(xs_plus)
-    loss_plus = (out_plus[0] - Value(target, [], "y")).square()
+    loss_plus = cross_entropy_from_logits(out_plus, target)
 
     # Perturb weight down
     weight_to_check.data = original_weight_value - eps
     xs_minus = [Value(x, [], "x") for x in input_data]  # Fresh values
     out_minus = mlp(xs_minus)
-    loss_minus = (out_minus[0] - Value(target, [], "y")).square()
+    loss_minus = cross_entropy_from_logits(out_minus, target)
 
     # Restore original weight
     weight_to_check.data = original_weight_value
@@ -339,74 +344,13 @@ def w2_numerical_grad():
 
     print(f"Numerical gradient: {numerical_gradient}")
     print(f"Difference: {abs(analytical_gradient - numerical_gradient)}")
-    print(f"Match: {abs(analytical_gradient - numerical_gradient) < 1e-5}")
 
-
-def xor():
-    print("\nxor")
-    xss = [[0, 0], [0, 1], [1, 1], [1, 0]]
-    yss = [0, 1, 0, 1]
-    learning_rate = 0.1
-    layers = [create_layer(2, 8), create_layer(8, 1, non_lin="sigmoid")]
-    mlp = MLP(layers)
-    print(mlp.layers)
-    for k in range(200):
-        print(f"iteration: {k}")
-        for xs, ys in zip(xss, yss):
-            xs = [Value(x, [], "x") for x in xs]
-            # ys = [[0], [1], [0], [1]]
-            out = mlp(xs)
-            loss = (out[0] - Value(ys, [], "y")).square()  # loss is MSE
-            print(f"\nloss: {loss.data}")
-            # zero all gradients
-            for layer in layers:
-                layer.zero_gradients()
-            loss.backward()
-            # update
-            for layer in layers:
-                for p in layer.parameters():
-                    # print(f"previous: {p.data}")
-                    p.data -= p.grad * learning_rate
-                    # print(f"updated: {p.data}")
-
-
-def two_layer_simple():
-    xs = [Value(x, [], "x") for x in [1.0, 2.0, 3.0]]
-    w1 = [Value(w, [], "w") for w in [2.0, 4.0, 6.0]]
-
-    bias = 5.0
-    neuron = Neuron(weights=w1, bias=bias)
-    print(neuron(xs))
-    n2 = default_neuron(3)
-    print(n2)
-    for n in n2.weights:
-        print(n)
-
-    # Testing with simple two layer
-    # x = 2, y = 2
-    x = Value(data=2, prev=[], label="x")
-    y = [Value(data=2.0, prev=[], label="y")]
-    z1 = Layer([Neuron([Value(0.1, [], label="w1")], 0.1)])
-    # a1 = ReLU(z1) = .1*x+.1 = .3
-    a1 = z1([x])
-    print(f"a1: {a1}")
-    # z2 = W2*a1 + b2 = .5*a1 + .1 = .25
-    z2 = Layer([Neuron([Value(0.5, [], label="w2")], 0.1)], non_lin="sigmoid")
-    # y_hat=sigmoid(z2) = .562
-    y_hat = z2(a1)
-    print(f"\ny_hat: {y_hat[0]}")
-    # loss = (y_hat-y)^2 = (.562 - 2)^2 = 2.067
-    loss = (y_hat[0] - y[0]) ** 2
-
-    # print(y_hat)
-    print(loss)
-    loss.backward()
-    print()
-    print(loss)
-    # Print the w2 values, gradient should be \frac{\partial L}{\partial w_2}=(\hat{y}-y)\hat{y}(1-\hat{y})a_1 * 2 = -0.212
-    # w2 happens to be the last element of the z2 layer
-    print("\nw2.grad should be ~ -0.212")
-    print(z2.neurons[-1].weights)
+    # Use relative error for better comparison
+    relative_error = abs(analytical_gradient - numerical_gradient) / (
+        abs(analytical_gradient) + abs(numerical_gradient) + 1e-8
+    )
+    print(f"Relative error: {relative_error}")
+    print(f"Match (relative error < 1e-5): {relative_error < 1e-5}")
 
 
 def train_step(xs_raw: list[float], y_index: int, mlp: MLP, lr: float):
@@ -437,6 +381,44 @@ def main():
     # w2_numerical_grad()
     #
     # Week 3
+
+    # Each example: ([x1, x2], class_index)
+    TRAIN_DATA = [
+        ([-2.0, -1.0], 0),
+        ([-1.5, -1.2], 0),
+        ([-2.2, -0.8], 0),
+        ([0.0, 2.0], 1),
+        ([0.5, 1.8], 1),
+        ([-0.5, 2.2], 1),
+        ([2.0, -1.0], 2),
+        ([1.5, -1.3], 2),
+        ([2.2, -0.7], 2),
+    ]
+
+    xs = [x for x, _ in TRAIN_DATA]
+    ys = [y for _, y in TRAIN_DATA]
+
+    print(xs)
+    print(ys)
+    layers = [create_layer(2, 4), create_layer(4, 4, non_lin="None")]
+    mlp = MLP(layers)
+
+    print("===== grad check (before training) =====")
+    w3_numerical_grad(mlp)
+    print()
+
+    for _ in range(50):
+        epoch_loss = mini_batch(mlp, xs, ys)
+        print(f"Epoch loss: {epoch_loss}\n")
+
+    for x, y in TRAIN_DATA:
+        print(f"input: {x}, true: {y}, predict: {predict(x, mlp)}")
+
+
+def predict(xs_raw, mlp):
+    xs = [Value(x, [], "x") for x in xs_raw]
+    logits = mlp(xs)
+    return max(range(len(logits)), key=lambda i: logits[i].data)
 
 
 if __name__ == "__main__":
