@@ -37,3 +37,25 @@ This effectively calculates the numerical result of $J_W^T v$ where v is $\nabla
 
 Clarificaion:
 Neilsen refers to "error" as a more physical and historical reference to what is mathematically the adjoint. Backprop and NN predate autodiff theory, and error is a bit more intuitive but mathematically it is a cotangent vector/sensitivity being passed as an ajdoint. In his terms the \delta "error" is the adjoint
+
+# Week 3 updates
+
+## $\delta$ notation
+
+Tracks the computed gradient of the loss with respect to a specific node (typically its pre-activation). It is a convenient way to organize the gradients with respect to the inputs/weights.
+
+## Edges carry derivatives
+
+Each edge between nodes defines the derivative mapping of the one node's output to the next node's input. The adjoints of these are used to pullback the gradient from the output to earlier nodes. During the forward pass the value of the node is cached which can then be used to calculate the local gradients without forming the full Jacobian. Instead the VJP allows direct computation from the covector (ajdoint) and the cached local values.
+
+## VJP vs full Jacobian
+
+Reverse mode is efficient for a scalar loss because it uses vector–Jacobian products (VJPs) to propagate gradients backward. Since the loss is scalar, the adjoint at the output is a single covector, which can be pulled back through the network in one backward pass. This avoids constructing full Jacobians and allows all parameter gradients to be computed in a single reverse traversal of the graph.
+
+The VJP is a linear map, not a matrix. It takes a vector v (seed) and returns the product $v^T J$ without building the Jacobian:
+
+- Input: $v \in \mathbb{R}^m$
+- Operation: $v^T J$ (or $J^T v depending on convention)
+- Output: vector in $\mathbb{R}^n$
+
+From a code perspective it is a closure, not a matrix.
