@@ -59,3 +59,24 @@ The VJP is a linear map, not a matrix. It takes a vector v (seed) and returns th
 - Output: vector in $\mathbb{R}^n$
 
 From a code perspective it is a closure, not a matrix.
+
+## Week 4 Updates
+
+## Gradients are covectors
+
+- $df_x: \mathbb{R}^n \to \mathbb{R}$
+- Why ML libraries hide this fact
+
+## Why gradients point "uphill"
+
+- Level sets and normals
+
+## Why gradient descent works
+
+- Small steps along the normal reduce the function fastest
+
+## Where choices sneak in
+
+- Inner products
+- Parameterization
+- Scaling
