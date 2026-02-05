@@ -60,23 +60,64 @@ The VJP is a linear map, not a matrix. It takes a vector v (seed) and returns th
 
 From a code perspective it is a closure, not a matrix.
 
-## Week 4 Updates
+# Week 4 Updates
 
 ## Gradients are covectors
 
-- $df_x: \mathbb{R}^n \to \mathbb{R}$
-- Why ML libraries hide this fact
+- $df_x: \mathbb{R}^n \to \mathbb{R}$ is the derivative at x, and is a covector: a linear map that maps a tangent vector to scalar.
+- The gradient is the vector representation of the covector after choosing an inner product.
+- ML Libraries hide this fact by implicitly identifying covectors with vectors using a fixed inner product. This makes the derivatives represented as gradients, and the action on tangent vectors as dot products.
 
 ## Why gradients point "uphill"
 
-- Level sets and normals
+- Gradients are normal to level sets since their inner product with the tangent vectors to the level set is zero. This makes the gradient point "uphill" in the direction of steepest ascent away from the level set. The definition of "uphill" is dependent on the metric and choice of inner product. A different metric would result in a different "steepest" direction.
 
 ## Why gradient descent works
 
-- Small steps along the normal reduce the function fastest
+- Once we know that the gradient is normal to the level set, then it is giving the direction of the steepest ascent. In gradient descent we reverse the sign to get the steepest descent, and multiply by a small learning rate to take small steps along the normal.
 
 ## Where choices sneak in
 
-- Inner products
-- Parameterization
-- Scaling
+- Inner products - The covector $df_x$ is metric-independent. But to get a vector representation (the gradient) we need to choose an inner product. The choice of inner product will define what direction is the 'steepest'. Here we are using the Euclidean inner product which gives the standard gradient $\nabla f$. If we choose a different inner product, the resulting vector would still be 'steepest ascent' but relative to a different metric. So gradient descent under the Euclidean metric isn't _the_ steepest descent - it's steepest descent _relative to one particular choice of metric_.
+- Parameterization - Choice of parameterization defines the coordinate system of the optimization space which affects the forward pass computations, and how the sensitivity is calculated in the backward.
+- Scaling - Choosing a learning rate affects how much we scale the descent, which can either lead to slow convergence, or divergence. The learning rate keeps things in the region where the first order approximations we are making are valid.
+
+## Summary
+
+Gradients are covectors; optimization is about which tangent directions are allowed and how we measure “steepest.”
+
+## Extra clarification on covector, gradient and inner product
+
+The covector is fixed, the choice is the inner product (metric), and the gradient vector is the result of that choice.
+If you change the metric:
+
+- $df_x$ stays the same
+- the gradient vector changes
+- the "steepest" direction changes
+
+- The covector asks: "How does the function change if I move in direction $v$?"
+- The metric answers: "What does it mean for one direction to be steeper than another?"
+- The gradient is the direction that best answers both questions simultaneously
+
+### Fixed vs chosen
+
+#### Fixed
+
+- The function $f(x)$
+- The derivative $df_x: T_x \to \mathbb{R}$ (a covector)
+
+#### Chosen
+
+- An inner product $\langle \cdot, \cdot \rangle_x$ on the tangent space
+- Equivalently a metric $g(x)$: $$df_x(v) = g(\nabla f(x), v) = \langle \nabla f(x), v \rangle_x$$
+
+The choice says how to:
+
+- Measure lengths
+- Measure angles
+- Convert covectors into vectors
+
+#### Induced (not chosen)
+
+- The gradient vector $\nabla f(x)$
+- Once the metric is fixed, the gradient is fixed
