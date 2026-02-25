@@ -1,0 +1,322 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+  <!--
+    Figma-friendly SVG:
+    - Explicit <g id="..."> groups for layer names
+    - Minimal CSS (mostly inline attrs) to avoid import quirks
+    - Rect + text separated (easy to select)
+    - Arrow marker defined once
+  -->
+  <defs>
+    <marker id="ArrowHead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#111111"/>
+    </marker>
+  </defs>
+
+  <!-- =========================
+       00_Title
+  ========================== -->
+  <g id="00_Title">
+    <text x="600" y="60"
+      text-anchor="middle"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="26"
+      font-weight="700"
+      fill="#111111">
+      Gradient Descent as Geometry — Chronology (Covector → Metric → Gradient)
+    </text>
+    <text x="600" y="92"
+      text-anchor="middle"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="14"
+      font-weight="400"
+      fill="#111111"
+      opacity="0.75">
+      One-page map: Taylor → dfₓ (covector) → constraint → metric → ∇f representation → geometry
+    </text>
+  </g>
+
+  <!-- =========================
+       Layout constants
+       Main column: x=160..1040 (w=880)
+  ========================== -->
+
+  <!-- =========================
+       01_Function_Point
+  ========================== -->
+  <g id="01_Function_Point">
+    <rect x="160" y="120" width="880" height="140" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="160"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">1) Function &amp; Point</text>
+
+    <text x="190" y="195"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">f : ℝⁿ → ℝ</text>
+
+    <text x="190" y="222"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">Current point: x ∈ ℝⁿ</text>
+
+    <text x="190" y="248"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="13" font-weight="400" fill="#111111" opacity="0.75">
+      We only assume local knowledge at x (not global structure).
+    </text>
+  </g>
+
+  <!-- Arrow 01 -->
+  <g id="Arrow_01">
+    <path d="M600 260 L600 300" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       02_Taylor_Linear_Map
+  ========================== -->
+  <g id="02_Taylor_Linear_Map">
+    <rect x="160" y="310" width="880" height="180" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="350"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">2) Taylor → Linear Map (Derivative as Covector)</text>
+
+    <text x="190" y="388"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">f(x + Δx) ≈ f(x) + dfₓ(Δx)</text>
+
+    <text x="190" y="420"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">dfₓ : ℝⁿ → ℝ   (linear map / covector)</text>
+
+    <text x="190" y="456"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="14" font-weight="400" fill="#111111">
+      <tspan font-weight="700">Key idea:</tspan>
+      first-order behavior only (higher-order terms shrink faster than the step).
+    </text>
+  </g>
+
+  <!-- Arrow 02 -->
+  <g id="Arrow_02">
+    <path d="M600 490 L600 530" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       03_Optimization_Question
+  ========================== -->
+  <g id="03_Optimization_Question">
+    <rect x="160" y="540" width="880" height="140" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="580"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">3) Optimization Question</text>
+
+    <text x="190" y="615"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="15" font-weight="400" fill="#111111">
+      Which <tspan font-weight="700">small step</tspan> Δx decreases f the most (locally)?
+    </text>
+
+    <text x="190" y="645"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="13" font-weight="400" fill="#111111" opacity="0.75">
+      Using the linear model ⇒ choose Δx to make dfₓ(Δx) as negative as possible.
+    </text>
+  </g>
+
+  <!-- Arrow 03 -->
+  <g id="Arrow_03">
+    <path d="M600 680 L600 720" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       04_Constraint
+  ========================== -->
+  <g id="04_Constraint">
+    <rect x="160" y="730" width="880" height="195" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="770"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">4) Constraint (Well-posedness)</text>
+
+    <text x="190" y="805"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="14" font-weight="400" fill="#111111">
+      Unconstrained linear objective is unbounded (you can scale Δx → ∞).
+    </text>
+
+    <text x="190" y="845"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">minimize   dfₓ(Δx)</text>
+
+    <text x="190" y="872"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">subject to ||Δx|| ≤ ε</text>
+
+    <text x="190" y="905"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="13" font-weight="400" fill="#111111" opacity="0.75">
+      This is a trust region: optimize the local model inside a small neighborhood.
+    </text>
+  </g>
+
+  <!-- Arrow 04 -->
+  <g id="Arrow_04">
+    <path d="M600 925 L600 965" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       05_Metric_Choice
+  ========================== -->
+  <g id="05_Metric_Choice">
+    <rect x="160" y="975" width="880" height="190" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="1015"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">5) Metric Choice (Inner Product ⇒ Norm)</text>
+
+    <text x="190" y="1053"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">Choose ⟨·,·⟩  ⇒  defines  ||v|| = √⟨v,v⟩</text>
+
+    <text x="190" y="1083"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">Euclidean: ⟨a,b⟩ = aᵀb</text>
+
+    <text x="190" y="1120"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="14" font-weight="400" fill="#111111">
+      <tspan font-weight="700">Key idea:</tspan>
+      “steepest” depends on the metric (change metric ⇒ change steepest direction).
+    </text>
+  </g>
+
+  <!-- Arrow 05 -->
+  <g id="Arrow_05">
+    <path d="M600 1165 L600 1205" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       06_Gradient_Representation
+  ========================== -->
+  <g id="06_Gradient_Representation">
+    <rect x="160" y="1215" width="880" height="185" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="1255"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">6) Gradient Appears (Representation of the Covector)</text>
+
+    <text x="190" y="1293"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">dfₓ(v) = ⟨∇f(x), v⟩</text>
+
+    <text x="190" y="1325"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="14" font-weight="400" fill="#111111">
+      ∇f(x) is the <tspan font-weight="700">vector</tspan> representing dfₓ under the chosen ⟨·,·⟩.
+    </text>
+
+    <text x="190" y="1356"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="13" font-weight="400" fill="#111111" opacity="0.75">
+      Gradient is not fundamental; dfₓ is. The metric makes the identification.
+    </text>
+  </g>
+
+  <!-- Arrow 06 -->
+  <g id="Arrow_06">
+    <path d="M600 1405 L600 1445" stroke="#111111" stroke-width="2.5" fill="none" marker-end="url(#ArrowHead)"/>
+  </g>
+
+  <!-- =========================
+       07_Geometry_Consequences
+  ========================== -->
+  <g id="07_Geometry_Consequences">
+    <rect x="160" y="1455" width="880" height="105" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="190" y="1495"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="18" font-weight="700" fill="#111111">7) Geometry &amp; Consequences (Euclidean case)</text>
+
+    <text x="190" y="1530"
+      font-family="SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+      font-size="16" font-weight="500" fill="#111111">Optimal step:  Δx* = −ε · ∇f(x) / ||∇f(x)||</text>
+  </g>
+
+  <!-- =========================
+       Inset: Geometric_Picture (separate group for easy editing)
+  ========================== -->
+  <g id="Inset_Geometric_Picture">
+    <!-- Frame -->
+    <rect x="820" y="995" width="220" height="420" rx="16" ry="16" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+    <text x="930" y="1032" text-anchor="middle"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="16" font-weight="700" fill="#111111">Geometric Picture</text>
+
+    <!-- Axes -->
+    <g id="Inset_Axes">
+      <line x1="930" y1="1380" x2="930" y2="1085" stroke="#111111" stroke-width="1.8" marker-end="url(#ArrowHead)"/>
+      <line x1="845" y1="1260" x2="1025" y2="1260" stroke="#111111" stroke-width="1.8" marker-end="url(#ArrowHead)"/>
+      <text x="1030" y="1265"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111" opacity="0.8">x₁</text>
+      <text x="935" y="1085"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111" opacity="0.8">x₂</text>
+    </g>
+
+    <!-- Level sets -->
+    <g id="Inset_Level_Sets">
+      <ellipse cx="930" cy="1260" rx="72" ry="44" fill="none" stroke="#111111" stroke-width="1.6"/>
+      <ellipse cx="930" cy="1260" rx="54" ry="33" fill="none" stroke="#111111" stroke-width="1.4" opacity="0.65"/>
+      <ellipse cx="930" cy="1260" rx="36" ry="22" fill="none" stroke="#111111" stroke-width="1.2" opacity="0.45"/>
+    </g>
+
+    <!-- Point x -->
+    <g id="Inset_Point_x">
+      <circle cx="972" cy="1238" r="4.5" fill="#111111"/>
+      <text x="982" y="1236"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111">x</text>
+    </g>
+
+    <!-- Trust region ball -->
+    <g id="Inset_Trust_Region">
+      <circle cx="972" cy="1238" r="52" fill="none" stroke="#111111" stroke-width="1.6" stroke-dasharray="6 6" opacity="0.8"/>
+      <text x="850" y="1410"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111" opacity="0.75">||Δx|| ≤ ε (ball)</text>
+    </g>
+
+    <!-- Gradient vector -->
+    <g id="Inset_Gradient_Vector">
+      <line x1="972" y1="1238" x2="1014" y2="1206" stroke="#111111" stroke-width="2.4" marker-end="url(#ArrowHead)"/>
+      <text x="1016" y="1204"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111">∇f(x)</text>
+    </g>
+
+    <!-- Optimal step (negative gradient direction) -->
+    <g id="Inset_Optimal_Step">
+      <line x1="972" y1="1238" x2="930" y2="1270" stroke="#111111" stroke-width="2.4" marker-end="url(#ArrowHead)"/>
+      <text x="887" y="1298"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111">Δx*</text>
+    </g>
+
+    <!-- Tangency cue line -->
+    <g id="Inset_Tangency_Cue">
+      <line x1="900" y1="1328" x2="1020" y2="1216" stroke="#111111" stroke-width="1.4" opacity="0.55"/>
+      <text x="850" y="1430"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111" opacity="0.75">Linear objective → hyperplanes</text>
+      <text x="850" y="1447"
+        font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+        font-size="12" font-weight="400" fill="#111111" opacity="0.75">Optimum occurs at tangency</text>
+    </g>
+  </g>
+
+  <!-- =========================
+       Footer_Caption
+  ========================== -->
+  <g id="Footer_Caption">
+    <text x="600" y="1590" text-anchor="middle"
+      font-family="Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial"
+      font-size="13" font-weight="400" fill="#111111" opacity="0.8">
+      Caption: Minimize first-order change dfₓ(Δx) under a metric-defined size constraint; ∇f appears only after choosing ⟨·,·⟩.
+    </text>
+  </g>
+</svg>
