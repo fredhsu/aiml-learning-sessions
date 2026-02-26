@@ -384,7 +384,7 @@ def train_step(xs_raw: list[float], y_index: int, mlp: MLP, lr: float):
     return loss.data
 
 
-# type Matrix = list[list[Value]]
+type Matrix = list[list[Value]]
 # type Batch = Matrix
 
 
@@ -397,7 +397,7 @@ def matmul(X, W):  # -> Matrix[Value]:
     x_dim2 = len(X[0])
     w_dim1 = len(W)
     w_dim2 = len(W[0])
-    out = [[Value(0.0, None, "") for j in range(3)] for i in range(3)]
+    out = [[Value(0.0, None, "") for j in range(w_dim2)] for i in range(x_dim1)]
     for i in range(x_dim1):
         for j in range(w_dim2):
             w_col = [row[j] for row in W]
@@ -412,19 +412,67 @@ def matmul(X, W):  # -> Matrix[Value]:
 
 
 def mm():
-    x = [[Value(j * 1.0, None, "") for j in range(1, 4)] for i in range(2)]
-    y = [[Value(j * 1.0, None, "") for j in range(1, 3)] for i in range(3)]
+    x = [[Value(j * 1.0, None, "") for j in range(1, 3)] for i in range(3)]
+    print("x:")
+    for row in x:
+        datas = [str(r.data) for r in row]
+        print(" ".join(datas))
+    y = [[Value(j * 1.0, None, "") for j in range(1, 5)] for i in range(2)]
+    print("y:")
+    for row in y:
+        datas = [str(r.data) for r in row]
+        print(" ".join(datas))
     a = matmul(x, y)
-    print(a[0][0])
+    print("matmul:")
+    print_matrix(a)
+
+    print("sum along 0")
+    print_vector(sum_axis(a, 0))
+    print("sum along 1")
+    print_vector(sum_axis(a, 1))
+    b = [Value(1.0, None, "b")] * len(a[0])
+    result = add_bias(a, b)
+    print_matrix(result)
 
 
-# def add_bias(Y: Matrix[Value], b: Vector[Value]) -> Matrix[Value]:
-#     out = Matrix
-#     pass
+def print_vector(x):
+    datas = [str(r.data) for r in x]
+    print(" ".join(datas))
 
 
-# def sum_axis(Y: Matrix[Value], axis=0 / 1) -> Vector[Value] or Value:
-#     pass
+def print_matrix(X):
+    for row in X:
+        datas = [str(r.data) for r in row]
+        print(" ".join(datas))
+
+
+def add_bias(Y: Matrix[Value], b: Vector[Value]) -> Matrix[Value]:
+    batch_size = len(Y)
+    num_features = len(Y[0])
+    out = Matrix
+    for i in range(batch_size):
+        for j in range(num_features):
+            out[i][j] = Y[i][j] + b[j]
+
+    return out
+
+
+# sum along rows if 0, cols if 1
+def sum_axis(Y: Matrix[Value], axis=0 / 1) -> Vector[Value] or Value:
+    num_rows = len(Y)
+    num_cols = len(Y[0])
+    if axis == 1:
+        out = [Value(0.0, None, "")] * num_rows
+        for i, row in enumerate(Y):
+            for col in row:
+                out[i] = out[i] + col
+        return out
+    else:
+        out = [Value(0.0, None, "")] * num_cols
+        for row in Y:
+            for i, col in enumerate(row):
+                out[i] = out[i] + col
+        return out
 
 
 def main():
