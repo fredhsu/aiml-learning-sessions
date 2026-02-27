@@ -4,29 +4,6 @@ from collections.abc import Callable
 from itertools import batched
 from typing import Self, override
 
-## Week 3 Session 2 (60–90m) — Code from scratch: add BCE/CE + batch training + gradient check
-# **Goal:** Your code stops being “it kinda works” and starts being *trustworthy*.
-
-# ### Work plan (60–75m)
-# 1. Implement the loss route you chose:
-#    - Route A: sigmoid + BCE
-#    - Route B: softmax + CE (softmax can be implemented stably via log-sum-exp)
-# 2. Add mini-batch support (minimal version):
-#    - Either loop samples and accumulate grads, or average loss over batch then backprop once (depending on your design).
-# 3. Add a **finite-difference gradient check** utility:
-#    - Pick one parameter $p$
-#    - Approx: $\frac{\partial L}{\partial p} \approx \frac{L(p+\epsilon)-L(p-\epsilon)}{2\epsilon}$
-#    - Compare to autograd gradient; print relative error
-# 4. “Torture test”:
-#    - Run grad-check on 2–3 randomly chosen params each run (small network, small data).
-
-# ### Output (last 10m)
-# - Commit code.
-# - Note: **Week3_S2_Code_Notes**
-#   - “What I implemented”
-#   - “Known limitations”
-#   - “Next obvious refactor”
-
 
 class Value:
     data: float
@@ -115,7 +92,7 @@ class Value:
         return out
 
     def sigmoid(self):
-        data = data = 1.0 / (1.0 + math.exp(-self.data))
+        data = 1.0 / (1.0 + math.exp(-self.data))
         out = Value(data, prev=[self], label="sigmoid")
 
         def _backward():
@@ -166,7 +143,7 @@ class Value:
         return out
 
     def __radd__(self, other: float | int | Self):
-        return other + self
+        return self + other
 
 
 type Vector = list[Value]
@@ -397,27 +374,32 @@ def matmul(X, W):  # -> Matrix[Value]:
     x_dim2 = len(X[0])
     w_dim1 = len(W)
     w_dim2 = len(W[0])
-    out = [[Value(0.0, None, "") for j in range(w_dim2)] for i in range(x_dim1)]
+    if x_dim2 != w_dim1:
+        raise ValueError("dimensions don't match")
+    out = [[Value(0.0, [], "") for j in range(w_dim2)] for i in range(x_dim1)]
+    W_cols = list(zip(*W))
     for i in range(x_dim1):
         for j in range(w_dim2):
-            w_col = [row[j] for row in W]
+            # w_col = [row[j] for row in W]
             # Need to sum only the products, not the prevs
             # print([x * w for (x, w) in zip(X[i], w_col)])
-            product = [x * w for (x, w) in zip(X[i], w_col)]
-            for k in product:
-                out[i][j] = k + out[i][j]
+            # product = [x * w for (x, w) in zip(X[i], w_col)]
+            product = [x * w for (x, w) in zip(X[i], W_cols[j])]
+            out[i][j] = sum_values(product)
+            # for k in product:
+            #     out[i][j] = k + out[i][j]
 
             # out[i][j] = sum_values([x * w for (x, w) in zip(X[i], w_col)])
     return out
 
 
-def mm():
-    x = [[Value(j * 1.0, None, "") for j in range(1, 3)] for i in range(3)]
+def mm_tests():
+    x = [[Value(j * 1.0, [], "") for j in range(1, 3)] for i in range(3)]
     print("x:")
     for row in x:
         datas = [str(r.data) for r in row]
         print(" ".join(datas))
-    y = [[Value(j * 1.0, None, "") for j in range(1, 5)] for i in range(2)]
+    y = [[Value(j * 1.0, [], "") for j in range(1, 5)] for i in range(2)]
     print("y:")
     for row in y:
         datas = [str(r.data) for r in row]
@@ -430,8 +412,9 @@ def mm():
     print_vector(sum_axis(a, 0))
     print("sum along 1")
     print_vector(sum_axis(a, 1))
-    b = [Value(1.0, None, "b")] * len(a[0])
+    b = [Value(1.0, [], "b") for _ in range(len(a[0]))]
     result = add_bias(a, b)
+    print("adding bias of 1")
     print_matrix(result)
 
 
@@ -449,7 +432,9 @@ def print_matrix(X):
 def add_bias(Y: Matrix[Value], b: Vector[Value]) -> Matrix[Value]:
     batch_size = len(Y)
     num_features = len(Y[0])
-    out = Matrix
+    if len(b) != num_features:
+        raise ValueError("Wrong size for broadcast")
+    out = [[Value(0, [], "") for j in range(num_features)] for i in range(batch_size)]
     for i in range(batch_size):
         for j in range(num_features):
             out[i][j] = Y[i][j] + b[j]
@@ -457,27 +442,79 @@ def add_bias(Y: Matrix[Value], b: Vector[Value]) -> Matrix[Value]:
     return out
 
 
-# sum along rows if 0, cols if 1
-def sum_axis(Y: Matrix[Value], axis=0 / 1) -> Vector[Value] or Value:
+def sum_axis(Y: Matrix[Value], axis=0) -> Vector[Value]:
     num_rows = len(Y)
     num_cols = len(Y[0])
     if axis == 1:
-        out = [Value(0.0, None, "")] * num_rows
+        out = [Value(0.0, [], "") for _ in range(num_rows)]
         for i, row in enumerate(Y):
             for col in row:
                 out[i] = out[i] + col
         return out
     else:
-        out = [Value(0.0, None, "")] * num_cols
+        out = [Value(0.0, [], "") for _ in range(num_cols)]
         for row in Y:
             for i, col in enumerate(row):
                 out[i] = out[i] + col
         return out
 
 
+def sum_all(Y: Matrix) -> Value:
+    # Flatten matrix into a list of Values, then sum them into one scalar Value
+    return sum_values([v for row in Y for v in row])
+
+
+def mean_all(Y: Matrix) -> Value:
+    total = sum_all(Y)
+    n = len(Y) * len(Y[0])
+    return total / n
+
+
+def list_to_matrix(L) -> Matrix[Value]:
+    return [
+        [Value(L[j][i], [], f"{j}{i}") for i in range(len(L[0]))] for j in range(len(L))
+    ]
+
+
+def list_to_vec(L):
+    return [Value(L[i], [], f"{i}") for i in range(len(L))]
+
+
+def manual_two_layer():
+    X = list_to_matrix([[1, -1, 2], [0, 2, -1]])
+    W1 = list_to_matrix([[1, 0], [0, 1], [-1, 1]])
+    xw1 = matmul(X, W1)
+    print("XW1:")
+    print_matrix(xw1)
+    b1 = list_to_vec([0, 0])
+    print("b1:")
+    print(b1)
+    z1 = add_bias(xw1, b1)
+    print("z1:")
+    print_matrix(z1)
+    a1 = [[i.relu() for i in r] for r in z1]
+    print("a1:")
+    print_matrix(a1)
+
+    W2 = list_to_matrix([[1], [-1]])
+    z1w2 = matmul(a1, W2)
+    print("z1w2")
+    print_matrix(z1w2)
+    b2 = list_to_vec([0])
+    z2 = add_bias(z1w2, b2)
+    print_matrix(z2)
+
+    # scalar loss
+
+    loss = sum_all(z2)
+    loss.backward()
+    print(f"w1grad: {W1[0][0].grad}, b1bias: {b1[0].grad}")
+    print(f"w1[2][0].grad: {W1[2][0].grad}")
+    print(f"w1[1][0].grad: {W1[1][0].grad}")
+
+
 def main():
-    # random.seed(42)
-    random.seed(142)
+    random.seed(42)
     TRAIN_DATA = [
         ([-2.0, -1.0], 0),
         ([-1.5, -1.2], 0),
@@ -500,19 +537,10 @@ def main():
         print()
     mlp = MLP(layers)
 
-    # print("===== grad check (before training) =====")
-    # w3_numerical_grad(mlp)
-    # print()
     for i in range(1, 5):
         print(f"\n== Run number {i} ==")
         loss = train_step(xs_raw=xs[0], y_index=0, mlp=mlp, lr=0.1)
         print(f"== loss: {loss} ==\n")
-    # for _ in range(50):
-    #     epoch_loss = mini_batch(mlp, xs, ys)
-    #     print(f"Epoch loss: {epoch_loss}\n")
-
-    # for x, y in TRAIN_DATA:
-    #     print(f"input: {x}, true: {y}, predict: {predict(x, mlp)}")
 
 
 def predict(xs_raw, mlp):
