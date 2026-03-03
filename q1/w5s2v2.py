@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.19.9"
+__generated_with = "0.20.2"
 app = marimo.App(width="medium", auto_download=["html"])
 
 
@@ -140,6 +140,99 @@ def _(generic_contour_with_gradient_path, np):
 @app.cell
 def _(mo):
     mo.md(text="The descent oscillates back and forth across the ravine, and does not make it to the global min after 15 steps. Changing the LR larger can lead to non-convergence. Smaller will fall even further short of the minimum in the given number of steps. Ravines come from very unequal eigenvalues")
+    return
+
+
+@app.cell
+def _(l2_gradient_descent, np, plt):
+    def momentum_gradient_descent(f, grad_f, x0: float, y0: float, lr: float = 0.09, momentum: float = 0.9, steps: int = 20) -> list[tuple[float, float]]:
+        """Gradient descent with momentum."""
+        points = [(x0, y0)]
+        x, y = x0, y0
+        vx, vy = 0.0, 0.0  # velocity terms
+    
+        for _ in range(steps):
+            gx, gy = grad_f(x, y)
+        
+            # Update velocity with momentum
+            vx = momentum * vx - lr * gx
+            vy = momentum * vy - lr * gy
+        
+            # Update position
+            x = x + vx
+            y = y + vy
+            points.append((x, y))
+    
+        return points
+
+    def compare_momentum_on_ravine(momentum=.9, lr=.09):
+        """Compare regular GD vs GD with momentum on the narrow ravine."""
+        # Define ravine function: f(x,y) = x² + 10y²
+        def f(x: float, y: float) -> float:
+            return x**2 + 10*y**2
+    
+        def grad_f(x: float, y: float) -> tuple[float, float]:
+            return (2*x, 20*y)
+    
+        # Create mesh for contour plot
+        delta = 0.025
+        x = np.arange(-3.0, 3.0, delta)
+        y = np.arange(-1.5, 1.5, delta)
+        X, Y = np.meshgrid(x, y)
+        Z = X**2 + 10*Y**2
+    
+        # Starting point
+        x0, y0 = -3.0, 1.0
+    
+        # Run both optimizers
+        regular_points = l2_gradient_descent(f, grad_f, x0, y0, lr, steps=20)
+        momentum_points = momentum_gradient_descent(f, grad_f, x0, y0, lr, momentum, steps=20)
+    
+        # Plot
+        fig, ax = plt.subplots(figsize=(12, 8))
+        CS = ax.contour(X, Y, Z, levels=25)
+        ax.clabel(CS, fontsize=9)
+    
+        # Regular GD path (oscillating)
+        reg_x = [p[0] for p in regular_points]
+        reg_y = [p[1] for p in regular_points]
+        ax.plot(reg_x, reg_y, 'r-', linewidth=2, alpha=0.7, label='Regular GD (zig-zag)')
+        ax.plot(reg_x[0], reg_y[0], 'ro', markersize=10)
+        ax.plot(reg_x[-1], reg_y[-1], 'rs', markersize=10)
+    
+        # Momentum GD path (smooth)
+        mom_x = [p[0] for p in momentum_points]
+        mom_y = [p[1] for p in momentum_points]
+        ax.plot(mom_x, mom_y, 'b-', linewidth=2, alpha=0.7, label='Momentum GD (smooth)')
+        ax.plot(mom_x[0], mom_y[0], 'bo', markersize=10)
+        ax.plot(mom_x[-1], mom_y[-1], 'bs', markersize=10)
+    
+        # Mark minimum
+        ax.plot(0, 0, 'g*', markersize=20, label='Global minimum')
+    
+        ax.set_xlabel('x', fontsize=12)
+        ax.set_ylabel('y', fontsize=12)
+        ax.set_title('Momentum Solves Zig-Zag: $f(x,y) = x^2 + 10y^2$', fontsize=14)
+        ax.legend(fontsize=11)
+        ax.grid(True, alpha=0.3)
+    
+        return plt.gca()
+
+    compare_momentum_on_ravine(lr=.09, momentum=.3)
+    return (compare_momentum_on_ravine,)
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    In the above we can see that adding momentum dampens out the zig-zag. However if $\beta$ is too large it can overshoot and spiral as seen below:
+    """)
+    return
+
+
+@app.cell
+def _(compare_momentum_on_ravine):
+    compare_momentum_on_ravine(lr=.09,momentum=.7)
     return
 
 
@@ -450,7 +543,7 @@ def _(go, l1_gradient_descent, l2_gradient_descent, np):
             marker=dict(size=12, color='#6366F1', symbol='circle'),
             showlegend=False
         ))
-    
+
         fig.add_trace(go.Scatter(
             x=[l2_x[-1]], y=[l2_y[-1]],
             mode='markers',
@@ -476,7 +569,7 @@ def _(go, l1_gradient_descent, l2_gradient_descent, np):
             marker=dict(size=12, color='#F59E0B', symbol='circle'),
             showlegend=False
         ))
-    
+
         fig.add_trace(go.Scatter(
             x=[l1_x[-1]], y=[l1_y[-1]],
             mode='markers',
