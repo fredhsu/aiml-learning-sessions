@@ -14,7 +14,7 @@
 
 import marimo
 
-__generated_with = "0.20.2"
+__generated_with = "0.20.4"
 app = marimo.App(width="medium", auto_download=["html"])
 
 
@@ -150,19 +150,19 @@ def _(l2_gradient_descent, np, plt):
         points = [(x0, y0)]
         x, y = x0, y0
         vx, vy = 0.0, 0.0  # velocity terms
-    
+
         for _ in range(steps):
             gx, gy = grad_f(x, y)
-        
+
             # Update velocity with momentum
             vx = momentum * vx - lr * gx
             vy = momentum * vy - lr * gy
-        
+
             # Update position
             x = x + vx
             y = y + vy
             points.append((x, y))
-    
+
         return points
 
     def compare_momentum_on_ravine(momentum=.9, lr=.09):
@@ -170,52 +170,52 @@ def _(l2_gradient_descent, np, plt):
         # Define ravine function: f(x,y) = x² + 10y²
         def f(x: float, y: float) -> float:
             return x**2 + 10*y**2
-    
+
         def grad_f(x: float, y: float) -> tuple[float, float]:
             return (2*x, 20*y)
-    
+
         # Create mesh for contour plot
         delta = 0.025
         x = np.arange(-3.0, 3.0, delta)
         y = np.arange(-1.5, 1.5, delta)
         X, Y = np.meshgrid(x, y)
         Z = X**2 + 10*Y**2
-    
+
         # Starting point
         x0, y0 = -3.0, 1.0
-    
+
         # Run both optimizers
         regular_points = l2_gradient_descent(f, grad_f, x0, y0, lr, steps=20)
         momentum_points = momentum_gradient_descent(f, grad_f, x0, y0, lr, momentum, steps=20)
-    
+
         # Plot
         fig, ax = plt.subplots(figsize=(12, 8))
         CS = ax.contour(X, Y, Z, levels=25)
         ax.clabel(CS, fontsize=9)
-    
+
         # Regular GD path (oscillating)
         reg_x = [p[0] for p in regular_points]
         reg_y = [p[1] for p in regular_points]
         ax.plot(reg_x, reg_y, 'r-', linewidth=2, alpha=0.7, label='Regular GD (zig-zag)')
         ax.plot(reg_x[0], reg_y[0], 'ro', markersize=10)
         ax.plot(reg_x[-1], reg_y[-1], 'rs', markersize=10)
-    
+
         # Momentum GD path (smooth)
         mom_x = [p[0] for p in momentum_points]
         mom_y = [p[1] for p in momentum_points]
         ax.plot(mom_x, mom_y, 'b-', linewidth=2, alpha=0.7, label='Momentum GD (smooth)')
         ax.plot(mom_x[0], mom_y[0], 'bo', markersize=10)
         ax.plot(mom_x[-1], mom_y[-1], 'bs', markersize=10)
-    
+
         # Mark minimum
         ax.plot(0, 0, 'g*', markersize=20, label='Global minimum')
-    
+
         ax.set_xlabel('x', fontsize=12)
         ax.set_ylabel('y', fontsize=12)
         ax.set_title('Momentum Solves Zig-Zag: $f(x,y) = x^2 + 10y^2$', fontsize=14)
         ax.legend(fontsize=11)
         ax.grid(True, alpha=0.3)
-    
+
         return plt.gca()
 
     compare_momentum_on_ravine(lr=.09, momentum=.3)
@@ -461,7 +461,7 @@ def _(np, plt):
         return plt.gca()
 
     compare_l1_l2_on_ravine()
-    return l1_gradient_descent, l2_gradient_descent
+    return (l2_gradient_descent,)
 
 
 @app.cell
@@ -478,142 +478,144 @@ def _(mo):
     return
 
 
-@app.cell
-def _(go, l1_gradient_descent, l2_gradient_descent, np):
-    def compare_l1_l2_on_ravine_plotly():
-        """Compare L1 vs L2 gradient descent on the ravine problem using Plotly."""
-        # Define ravine function: f(x,y) = x² + 10y²
-        def f(x, y):
-            return x**2 + 10*y**2
-
-        def grad_f(x, y):
-            return (2*x, 20*y)
-
-        # Create mesh for contour plot
-        delta = 0.025
-        x = np.arange(-3.0, 3.0, delta)
-        y = np.arange(-1.5, 1.5, delta)
-        X, Y = np.meshgrid(x, y)
-        Z = X**2 + 10*Y**2
-
-        # Starting point
-        x0, y0 = -2.5, 0.8
-
-        # Run both optimizers
-        l2_points = l2_gradient_descent(f, grad_f, x0, y0, lr=0.09, steps=25)
-        l1_points = l1_gradient_descent(f, grad_f, x0, y0, lr=0.15, steps=40)
-
-        # Extract coordinates
-        l2_x = [p[0] for p in l2_points]
-        l2_y = [p[1] for p in l2_points]
-        l1_x = [p[0] for p in l1_points]
-        l1_y = [p[1] for p in l1_points]
-
-        # Create figure
-        fig = go.Figure()
-
-        # Add contour plot
-        fig.add_trace(go.Contour(
-            x=x, y=y, z=Z,
-            colorscale='Teal',
-            showscale=True,
-            contours=dict(
-                start=0,
-                end=Z.max(),
-                size=Z.max()/20,
-            ),
-            opacity=0.5,
-            name='Ravine function'
-        ))
-
-        # Add L2 path
-        fig.add_trace(go.Scatter(
-            x=l2_x, y=l2_y,
-            mode='lines+markers',
-            name='L2 (Euclidean)',
-            line=dict(color='#6366F1', width=3),
-            marker=dict(size=6, color='#6366F1')
-        ))
-
-        # Add L2 start and end points
-        fig.add_trace(go.Scatter(
-            x=[l2_x[0]], y=[l2_y[0]],
-            mode='markers',
-            name='L2 start',
-            marker=dict(size=12, color='#6366F1', symbol='circle'),
-            showlegend=False
-        ))
-
-        fig.add_trace(go.Scatter(
-            x=[l2_x[-1]], y=[l2_y[-1]],
-            mode='markers',
-            name='L2 end',
-            marker=dict(size=12, color='#6366F1', symbol='square'),
-            showlegend=False
-        ))
-
-        # Add L1 path
-        fig.add_trace(go.Scatter(
-            x=l1_x, y=l1_y,
-            mode='lines+markers',
-            name='L1 (Manhattan)',
-            line=dict(color='#F59E0B', width=3),
-            marker=dict(size=6, color='#F59E0B')
-        ))
-
-        # Add L1 start and end points
-        fig.add_trace(go.Scatter(
-            x=[l1_x[0]], y=[l1_y[0]],
-            mode='markers',
-            name='L1 start',
-            marker=dict(size=12, color='#F59E0B', symbol='circle'),
-            showlegend=False
-        ))
-
-        fig.add_trace(go.Scatter(
-            x=[l1_x[-1]], y=[l1_y[-1]],
-            mode='markers',
-            name='L1 end',
-            marker=dict(size=12, color='#F59E0B', symbol='square'),
-            showlegend=False
-        ))
-
-        # Add global minimum
-        fig.add_trace(go.Scatter(
-            x=[0], y=[0],
-            mode='markers',
-            name='Global minimum',
-            marker=dict(size=15, color='#10B981', symbol='star')
-        ))
-
-        # Update layout
-        fig.update_layout(
-            title='L1 vs L2 Gradient Descent on Ravine: f(x,y) = x² + 10y²',
-            xaxis_title='x',
-            yaxis_title='y',
-            width=1000,
-            height=700,
-            hovermode='closest',
-            showlegend=True,
-            plot_bgcolor='#F9FAFB',
-            paper_bgcolor='white'
-        )
-
-        return fig
-
-    compare_l1_l2_on_ravine_plotly()
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+    # Week 7 Session 2 - Optimizer code
+    """)
     return
 
 
 @app.cell
-def _(mo):
-    mo.md(r"""
-    **Interactive Plotly Visualization:**
-    - Hover over the paths to see exact coordinates
-    - **L2 (blue):** Smooth diagonal steps with oscillation across the ravine
-    - **L1 (red):** Sharp zigzag pattern along coordinate axes
-    - The contour lines show the function landscape: $$f(x,y) = x^2 + 10y^2$$
-    """)
+def _():
+    from abc import ABC, abstractmethod
+
+    class Optimizer(ABC):
+        @abstractmethod
+        def step(self, point):
+            pass
+    
+
+    return (Optimizer,)
+
+
+@app.function
+# Gradient fucntion for z=x^2 + 10*y^2
+def grad_f(x, y):
+    return (2*x, 20*y)
+
+
+@app.cell
+def _(Optimizer):
+    class SGD(Optimizer):
+        def __init__(self, learning_rate):
+            self.learning_rate = learning_rate
+
+        # Taking a step using GD for the function z=x^2 + 10*y^2
+        def step(self, point, grad_f):
+            (x,y)=point
+            (dzdx,dzdy) = grad_f(x,y)
+            new_x = x - self.learning_rate * dzdx
+            new_y = y - self.learning_rate * dzdy
+            return (new_x, new_y)
+
+    return (SGD,)
+
+
+@app.cell
+def _(SGD):
+    sgd = SGD(0.09)
+    starting_point=(-3,1)
+    sgd_next_step = starting_point
+    for j in range(15):
+        sgd_next_step=sgd.step(sgd_next_step, grad_f)
+        print(sgd_next_step)
+
+    return (starting_point,)
+
+
+@app.cell
+def _(SGD, generic_contour_with_gradient_path, np):
+    def narrow_ravine_sgd():
+        learning_rate=.09
+        sgd = SGD(learning_rate)
+        delta = 0.025
+        x = np.arange(-3.0, 3.0, delta)
+        y = np.arange(-3.0,3.0, delta)
+        X, Y = np.meshgrid(x,y)
+        Z = X**2 + 10*Y**2
+
+        point = (-3,1)
+        points_list=[point]
+        for _ in range (15):
+            point=sgd.step(point, grad_f)
+            points_list.append(point)
+        return generic_contour_with_gradient_path(X,Y,Z,points_list, "Gradient Descent on narrow ravine $Z=X^2 + 10Y^2$")
+    narrow_ravine_sgd()
+    return
+
+
+@app.cell
+def _(Optimizer):
+    class MomentumSGD(Optimizer):
+        def __init__(self, learning_rate, beta):
+            self.learning_rate = learning_rate
+            self.beta = beta
+            self.vx_prev = 0
+            self.vy_prev = 0
+
+
+        # Taking a step using Momentum GD for the function z=x^2 + 10*y^2
+        # Currently velocity state is hardcoded, I should generalize 
+        def step(self, point, grad_f):
+            (x,y)=point
+            (dzdx,dzdy) = grad_f(x,y)
+            vx = self.beta * self.vx_prev + dzdx
+            vy = self.beta * self.vy_prev + dzdy
+            self.vx_prev = vx
+            self.vy_prev = vy
+            new_x = x - self.learning_rate * vx 
+            new_y = y - self.learning_rate * vy
+            return (new_x, new_y)
+
+    return (MomentumSGD,)
+
+
+@app.cell
+def _(MomentumSGD, starting_point):
+    msgd = MomentumSGD(0.09, .9)
+    msgd_next_step = starting_point
+    for i in range(15):
+        msgd_next_step=msgd.step(msgd_next_step, grad_f)
+        print(msgd_next_step)
+    msgd_next_step
+    return
+
+
+@app.cell
+def _(MomentumSGD, generic_contour_with_gradient_path, np):
+    def narrow_ravine_msgd():
+        learning_rate=.009
+        beta = 0.9
+        sgd = MomentumSGD(learning_rate, beta)
+        delta = 0.025
+        x = np.arange(-3.0, 3.0, delta)
+        y = np.arange(-3.0,3.0, delta)
+        X, Y = np.meshgrid(x,y)
+        Z = X**2 + 10*Y**2
+
+        point = (-3,1)
+        points_list=[point]
+        for _ in range (15):
+            point=sgd.step(point, grad_f)
+            points_list.append(point)
+        return generic_contour_with_gradient_path(X,Y,Z,points_list, "Gradient Descent on narrow ravine $Z=X^2 + 10Y^2$")
+    narrow_ravine_msgd()
+    return
+
+
+@app.cell
+def _():
     return
 
 
