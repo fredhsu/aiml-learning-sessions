@@ -20,7 +20,7 @@ This shows the effect of weight decay: at each step the weights are shrunk towar
 ## Geometric picture
 
 The additional weight decay adds a bowl centered at the origin, increasing the curvature in every direction. This has a stronger effect in the small eigenvalue directions because the curvature of $L$ is weak, so $\lambda$ dominates the denominator of the regularized minimum $(\lambda_i + \lambda)$ pulling it more towards zero.
-![Loss plot with bowl](w7s2-loss-plot.png)
+![Loss plot with bowl](l2_regularization_geometry.svg)
 
 ## Bayesian framing
 
