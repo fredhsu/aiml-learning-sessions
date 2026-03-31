@@ -209,3 +209,31 @@ With momentum, we see an improvement in convergence from $O(\kappa) \to O(\sqrt{
 ## Nesterov vs. heavy-ball
 
 One problem with momentum is that it can overshoot due to the momentum in the heavy ball equation is already committed to moving in the current direction before the gradient $w^k$ is factored in. This can be improved using [[Nesterov]], which uses a 'look ahead' $w^k-\alpha \beta v^k$ to calculate based on the next step.
+
+# Week 8 (v0.7): Regularization and diagnostics
+
+## L2 Regularization as weight decay
+
+L2 Regularization adds a penalty based on L2 norm, which after differentiation acts as weight decay when updating. At each step the weights are shrunk towards zero by a factor of $(1-\alpha \lambda)$.
+
+## What weight decay does and does not guarantee
+
+Weight decay needs to be constrained to $(1- \alpha \lambda) > 0$ to avoid divergence, but it does not guarantee convergence.
+
+## Bayesian framing
+
+The $\lambda$ hyperparameter used to define the regularization can be viewed as the inverse to the variance. As $\lambda$ increases, so does the belief that the weights should be near zero.
+
+## Early stopping as implicit regularization
+
+Early stopping can prevent overfitting by the training loop, implicitly acting as a form of regularization.
+
+## Diagnostic checklist (five failure modes)
+
+| Observation                                      | Cause                                                                      | Check                                          |
+| ------------------------------------------------ | -------------------------------------------------------------------------- | ---------------------------------------------- |
+| Loss not decreasing from the start               | Learning rate too high/low or computation bug                              | Overfit on a small sample and see if it works  |
+| Train loss decreasing but val loss not improving | Overfitting                                                                | Check shape of divergence / data leakage       |
+| Both losses decreasing, but very slowly          | small learning rate, poor initialization                                   | Check update/weight ratio, should be near 1e-3 |
+| Loss becomes NaN or Inf                          | LR too high causing divergence                                             | Log gradient norm, check $\alpha \lambda < 1$  |
+| Accuracy flat despite loss decreasing            | improvements to loss are not enough to trigger prediction change/accuracy, | Check scaling or per class accuracy            |
