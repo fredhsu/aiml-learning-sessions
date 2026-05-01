@@ -1,0 +1,384 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.23.3",
+    "script_metadata_hash": "536220facf16683dd26a59fbb182bde0"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "90df9e245c67d919e871c709d9e7e264",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "b050df573ae2a433a56fc4ae3430cfa1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "dc2634dffdc3cb8398816d154d0c0c28",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "372ed37fddd77c8dabb6016edd9c7437",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "497bde1e1ffadae98153cf48088404c5",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "d6478592f60b925601334879c426a9d0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "641afb94716b8bd7d10a21da851dfde6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "cabfe537074d78bc1545aa67f3c9b4c7",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "cbda44a70309926f3c8d4a60e1a8b4ce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "0ed3f1ed4eeb7c31c1f41340da42766e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "d7da6de1e6472868ddc8a5646198cc33",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Flat length: 354\nLayer 0 neuron 3 weight 1: expected -0.8261223347411677, got -0.8261223347411677\nLayer 0 neuron 5 bias: expected 0.0, got 0.0\nLayer 2 neuron 0 weight 7: expected 0.10336084225278253, got 0.10336084225278253\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "emfo",
+      "code_hash": "44e3d4462f020cf8d5e9325146e27de6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "array([ 0.2788536 , -0.94997849, -0.44994136, -0.55357852,  0.47294243,\n        0.35339897,  0.78435914, -0.82612233,  0.        ,  0.        ,\n        0.        ,  0.        , -0.15615636, -0.94040556, -0.56272405,\n        0.01071058, -0.94692806, -0.6023247 ,  0.29976888,  0.08988296,\n       -0.55911876,  0.17853137,  0.61886091, -0.98700248,  0.6116385 ,\n        0.39627879, -0.31949897, -0.689041  ,  0.        ,  0.        ,\n        0.        ,  0.        ])\n[{'W_shape': (4, 2), 'activation': 'relu', 'b_shape': (4,)},\n {'W_shape': (4, 4), 'activation': 'None', 'b_shape': (4,)}]\nnow unflatten\n[{'W': array([[ 0.2788536 , -0.94997849],\n       [-0.44994136, -0.55357852],\n       [ 0.47294243,  0.35339897],\n       [ 0.78435914, -0.82612233]]),\n  'activation': 'relu',\n  'b': array([0., 0., 0., 0.])},\n {'W': array([[-0.15615636, -0.94040556, -0.56272405,  0.01071058],\n       [-0.94692806, -0.6023247 ,  0.29976888,  0.08988296],\n       [-0.55911876,  0.17853137,  0.61886091, -0.98700248],\n       [ 0.6116385 ,  0.39627879, -0.31949897, -0.689041  ]]),\n  'activation': 'None',\n  'b': array([0., 0., 0., 0.])}]\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "7cc29895c861056a5d600bca19461aac",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "33e47a1f096bfe5e27ac0e8ac634836c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "numpy loss:        0.8776988096\nValue-engine loss: 0.8776988096\nDifference:        0.00e+00\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "iLit",
+      "code_hash": "88f9ed2ea3659a92a5d2405debf40b76",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "fdf051f1a7d77747bca0eb3e64c537c9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "d944071613c3c7ffd1224941ec3efb31",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "e061d20ac1801731d87a8b7d971939c8",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "9c899c5c60016ca376a4d11e8bde032b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "8478dba305c904de403457929ef03b78",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "[-2.46 -0.8 ]\n[-2.0172  0.64  ]\n[-1.654104 -0.512   ]\n[-1.35636528  0.4096    ]\n[-1.11221953 -0.32768   ]\n[-0.91202001  0.262144  ]\n[-0.74785641 -0.2097152 ]\n[-0.61324226  0.16777216]\n[-0.50285865 -0.13421773]\n[-0.41234409  0.10737418]\n[-0.33812216 -0.08589935]\n[-0.27726017  0.06871948]\n[-0.22735334 -0.05497558]\n[-0.18642974  0.04398047]\n[-0.15287238 -0.03518437]\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "15998593923b717100c26c5d0132b639",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "5d8169f09f04814c6446a258457f23a3",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "14aa949440f2082c10eb1b48b89e7edd",
+      "outputs": [],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Epoch   0 | loss 0.5501\nEpoch  10 | loss 0.2062\nEpoch  20 | loss 0.1412\nEpoch  30 | loss 0.0986\nEpoch  40 | loss 0.0832\nEpoch  50 | loss 0.0697\nEpoch  60 | loss 0.0647\nEpoch  70 | loss 0.0580\nEpoch  80 | loss 0.0547\nEpoch  90 | loss 0.0514\nEpoch 100 | loss 0.0509\nEpoch 110 | loss 0.0503\nEpoch 120 | loss 0.0477\nEpoch 130 | loss 0.0478\nEpoch 140 | loss 0.0447\nEpoch 150 | loss 0.0453\nEpoch 160 | loss 0.0444\nEpoch 170 | loss 0.0462\nEpoch 180 | loss 0.0425\nEpoch 190 | loss 0.0418\nEpoch 199 | loss 0.0420\nEpoch   0 | loss 0.5092\nEpoch  10 | loss 0.0927\nEpoch  20 | loss 0.0545\nEpoch  30 | loss 0.0498\nEpoch  40 | loss 0.0387\nEpoch  50 | loss 0.0510\n",
+          "mimetype": "text/plain"
+        }
+      ]
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "973a54ae5754ab07b27efbe3bb164c18",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "01d000bcb0533f45a1adebcece30448d",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "9e4f22cffeeabed8cc370f629e5a116f",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "543088435dc5d8c0eb68b9232c5c39e5",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "1444505b18c56220d21bcd09ed802b01",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "9ddc012470dec04c9a54f97e774c0d52",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "c7e78633698844a45c935c518ea1bdbf",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "4479d49d705f718304a81fe47c6f71a6",
+      "outputs": [],
+      "console": []
+    }
+  ]
+}

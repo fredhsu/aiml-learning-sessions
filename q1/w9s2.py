@@ -15,7 +15,7 @@
 
 import marimo
 
-__generated_with = "0.22.3"
+__generated_with = "0.23.4"
 app = marimo.App(width="medium", auto_download=["html"])
 
 
@@ -307,7 +307,7 @@ def _(Adam, MomentumSGD, SGD, plt):
         ax.grid(True, alpha=0.3)
         ax.legend()
 
-    
+
         return plt.gca()
 
     plot_loss_sgd_and_momentum_decay()
