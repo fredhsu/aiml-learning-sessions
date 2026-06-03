@@ -1,3 +1,7 @@
+---
+created: 2026-05-11T14:28:54Z
+id: 019e1770-e33b-7f21-9715-633773879416
+---
 # Momentum Math
 
 ## Heavy ball update
