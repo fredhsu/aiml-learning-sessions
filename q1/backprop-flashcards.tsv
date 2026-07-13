@@ -1,0 +1,51 @@
+What is backpropagation, in one sentence?	Reverse-mode automatic differentiation for a scalar loss defined by a composition of functions, implemented by composing adjoint linearizations in reverse topological order.	backprop autodiff definition
+In a neural net, what is backprop used to compute?	Gradients of the loss with respect to parameters (and intermediate activations).	backprop gradients
+What structure does backprop operate on?	A computational graph (a directed acyclic graph).	backprop computational-graph
+
+During the forward pass, what does backprop typically cache?	Intermediate activations (values needed to compute local derivatives later).	backprop forward-pass
+Why cache activations during the forward pass?	So local Jacobians/derivatives can be computed efficiently during the backward pass.	backprop forward-pass
+What ordering does backprop use in the backward pass?	Reverse topological order.	backprop algorithm
+
+What rule is repeatedly applied during backprop’s backward pass?	The chain rule.	backprop chain-rule
+In reverse-mode, what “thing” is propagated backward?	Adjoints (sensitivities / cotangent vectors) of the loss w.r.t. node values.	backprop adjoints
+At each node, how is the incoming adjoint transformed?	Multiply the upstream gradient by the local Jacobian (via a VJP, typically without building the full Jacobian).	backprop local-derivatives
+What is the initial adjoint for the loss node L?	∂L/∂L = 1.0.	backprop initialization
+Why is reverse-mode efficient for neural nets with many parameters?	Because one backward pass gives gradients for all parameters when the output is a single scalar loss.	autodiff efficiency
+Compared to reverse-mode, what’s the core inefficiency of forward-mode for many parameters?	Forward-mode would require (roughly) a separate pass per parameter/direction to get all parameter gradients.	autodiff efficiency
+
+What does VJP stand for?	Vector-Jacobian Product.	autodiff vjp
+Conceptually, what does a VJP compute?	Jᵀ v (Jacobian-transpose times a vector), without explicitly forming J.	autodiff vjp
+Why does VJP help avoid expensive Jacobian construction?	It computes the needed product directly, often exploiting sparsity/structure, instead of materializing a (huge) Jacobian.	autodiff vjp
+For an element-wise operation, what special structure does the Jacobian have?	It’s diagonal.	autodiff jacobian
+For an element-wise operation, what does the VJP reduce to?	A Hadamard (element-wise) product.	autodiff vjp
+For matrix multiplication / linear layers, why can we avoid explicit Jacobians?	Closed-form gradient expressions exist (e.g., outer products / matmul identities).	backprop linear-layer
+In your notes, what does “forward mode uses J_f x” mean?	It pushes a tangent vector x forward through the Jacobian J_f (a JVP).	autodiff forward-mode
+In your notes, what does “reverse mode uses x = J_f^T y” mean?	It pulls a cotangent vector y backward via J_fᵀ (a VJP).	autodiff reverse-mode
+What’s the intuitive meaning of an adjoint in backprop (practical view)?	Often “the transpose” action you apply when moving gradients backward through a linear map.	linear-algebra adjoint
+
+For a linear map A: V → W, what direction does A push things?	It pushes vectors forward: V → W.	linear-algebra pushforward
+
+For a linear map A: V → W, what direction does the adjoint act?	It pulls covectors/gradients backward: W* → V*.	linear-algebra pullback
+What is a “cotangent vector” in this context (plain language)?	A gradient/sensitivity object that maps small changes in inputs to changes in scalar loss.	linear-algebra cotangent
+
+Each node x →f y induces what two maps (geometric view)?	A forward map on tangents and a backward map (pullback) on cotangents.	backprop geometry
+In the notes, what is the backward (pullback) map’s type signature?	f*: T_y* → T_x*.	backprop geometry
+
+In the notes, what is the forward map’s type signature?	f*: T_x → T_y.	backprop geometry
+Fill in the pattern: backprop computes ∂L/∂x = ______ (∂L/∂y).	f* (the pullback of f applied to the upstream gradient).	backprop chain-rule
+
+When the network output is scalar loss L, what shape is the “Jacobian” of L w.r.t. a vector?	It behaves like a row vector; the gradient is its transpose (a column vector).	autodiff shapes
+In your VJP section, what is J_W?	The local Jacobian ∂y/∂W for a layer output y with respect to weights W.	backprop vjp
+In your VJP section, what is ∇_y L?	The upstream gradient: sensitivity of loss to the layer output y.	backprop upstream-gradient
+
+State the general VJP form for weight gradients from your notes.	∇_W L = J_Wᵀ · (∇_y L).	backprop vjp
+For a linear layer y = W x, what is the efficient expression for ∇_W L?	∇_W L = (∇_y L) xᵀ (an outer product).	backprop linear-layer
+In one phrase: what does backprop “compose” during the backward pass?	Adjoint linearizations (pullbacks) of each function, in reverse order.	backprop conceptual
+What’s the key difference between “error” (δ) in Nielsen’s framing and “adjoint” here?	They refer to the same propagated sensitivity; δ is the historical/intuitional name for the adjoint.	backprop nielsen-delta
+
+If you had to explain “upstream gradient” in one line, what is it?	The gradient of the loss with respect to a node’s output, arriving from later computations.	backprop upstream-gradient
+What does “reverse topological order” ensure during backprop?	That when you process a node, all contributions from downstream nodes have already been accounted for.	backprop algorithm
+Why do “focused” prompts matter for SRS review?	Overly broad prompts encourage partial recall and inconsistent answers; tight scope improves reliable retrieval.	srs prompt-design
+Why do “context-independent” prompts matter?	Because cards are reviewed interleaved; the prompt must include enough context to be unambiguous on its own.	srs prompt-design
+
+
