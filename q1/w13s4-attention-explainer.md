@@ -15,40 +15,18 @@ So using a temperature threshold around 11.72 produces a strong enough differenc
 
 ## 2. Learned metric
 
+From session 1, we found that score calculation can be made a bilinear form:
+$$
+score(x_i, x_j)=(W_Q x_i)^T (W_K x_j) = x_i^T M x_j
+$$
+with $M=W_Q^T W_K$. 
 
+This bilinear form is a generalized inner product with a learned metric. In contrast, in Weeks 4-5 we chose $I$ as a fixed metric inner product which defined the geometry. If we were to use the same matrices for $W_Q$ and $W_K$, then we'd have a sufficient condition for symmetric $M: M=W^T W$ and therefore $x_i^T M x_j = x_j^T M x_i$. A symmetric M gives symmetric scores and weighs our attention the same in both directions. In other words, if we used a symmetric matrix for M, then i would attend to j the same as j attends to i. For this use case we want asymmetry, so we use different $W_Q$ and $W_K$ allowing i and j to weigh each other independently. Note that this is different than the asymmetry we see in the A matrix, which is often asymmetric due to the row softmax. 
 
-The weights are an inner product under a learned metric — the 
-𝑥
-𝑖
-⊤
-𝑀
-𝑥
-𝑗
-x
-i
-⊤
-	​
+Additionally session 1 showed why we divide the score by $\sqrt{d_k}$ to keep variance controlled to prevent softmax from saturating.
 
-Mx
-j
-	​
+## 3. Attention vs Convolution
 
- bilinear-form paragraph; 
-𝑑
-𝑘
-d
-k
-	​
-
-	​
-
- as keeping that form's variance controlled.
-Attention vs convolution — 
-out
-=
-𝐴
-𝑉
-out=AV for both; fixed band vs. learned content-dependent mixing.
 Multi-head — parallel lookups in different subspaces (one line; the conv-channel analogy is a Q2 open question, not a claim).
 Positional encoding — attention is permutation-equivariant, so order must be added back (one line).
 Forward hooks — ViT / 2D positional encoding; multi-head≈conv-channels to verify; backward link to Week 10 residuals.
