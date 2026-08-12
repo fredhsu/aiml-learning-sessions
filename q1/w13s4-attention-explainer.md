@@ -27,53 +27,18 @@ Additionally session 1 showed why we divide the score by $\sqrt{d_k}$ to keep va
 
 ## 3. Attention vs Convolution
 
+Let's dig deeper into the comparison we raised in the intro between convolution and attention. In both cases we have the output = $AV$, and linear in $V$, so the difference lies in $A$.
+- Convolution: A is fixed as a Toeplitz band, and the weights are the same regardless of the input. The locality of the calculations is hard-coded as a bias.
+- Attention: $A=softmax(scores)$, is now dependent on the input. The filter/connectivity is now chosen per input.
+  - The cost of this additional flexibility is the [[translation equivariance]] we got for free with convolution is no longer there until you add it.
+  - Note: The softmax used in A also means it is nonlinearly dependent on x. So we cannot claim that both cases are linear in A, only that they are linear in V.
+
+So we can see convolution as a special case where A is set to a fixed band, and no longer dependent on the input. Or conversely that attention is convolution with the connectivity learned from the input data.
+
+## 4. Multi-head
 Multi-head — parallel lookups in different subspaces (one line; the conv-channel analogy is a Q2 open question, not a claim).
+
+## 5. Positional Encoding
 Positional encoding — attention is permutation-equivariant, so order must be added back (one line).
+## 6. Forward hooks
 Forward hooks — ViT / 2D positional encoding; multi-head≈conv-channels to verify; backward link to Week 10 residuals.
-
-Sections 1–3 are the spine; 4–6 stay tight so it reads as a page, not an essay.
-
-Label-check discipline for this write — memory has this flagged as a standing S4 item, and there are three live traps in exactly this material. Keep them visible as you draft:
-
-A vs S. The asymmetry argument lives on the score matrix 
-𝑆
-S (via non-symmetric 
-𝑀
-M), not on 
-𝐴
-A. 
-𝐴
-A is asymmetric trivially from the row-softmax, independent of 
-𝑆
-S. Don't let the labels swap — this is the two-week pattern.
-Shape. 
-𝐴
-A is 
-(
-𝑛
-𝑞
-,
-𝑛
-𝑘
-)
-(n
-q
-	​
-
-,n
-k
-	​
-
-) and can never contain 
-𝑑
-𝑣
-d
-v
-	​
-
- — it's computed before 
-𝑉
-V is read. This missed three times in S2; if it appears in the explainer, it's the thing to catch.
-Positions vs subspaces. Multi-head attends to subspaces, not positions.
-
-Rather than draft anything for you: write Section 1 in your own words — the hard→soft lookup framing, with softmax as soft argmax and one concrete tie to your S2 temperature result. I'll come back with a targeted issue list, same as the other weeks, and we'll move section by section.
