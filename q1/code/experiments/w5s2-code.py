@@ -1,0 +1,190 @@
+# /// script
+# dependencies = [
+#     "anthropic==0.79.0",
+#     "marimo",
+#     "matplotlib==3.10.8",
+#     "numpy==2.4.2",
+#     "pydantic-ai-slim==1.57.0",
+# ]
+# requires-python = ">=3.12"
+# ///
+
+import marimo
+
+__generated_with = "0.19.9"
+app = marimo.App(width="medium")
+
+
+@app.cell
+def _():
+    import marimo as mo
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+
+    return mo, np, plt
+
+
+@app.cell
+def _(plt):
+
+
+    def generic_contour_with_gradient_path(X,Y,Z,points_list, title="", origin_label="Global Minimum (0,0)"):
+        fig, ax = plt.subplots(figsize=(10, 8))
+        CS = ax.contour(X, Y, Z, levels=20)
+        ax.clabel(CS, fontsize=9)
+        ax.set_title(title)
+    
+        # Plot the path with arrows
+        for i in range(len(points_list) - 1):
+            px, py = points_list[i]
+            next_px, next_py = points_list[i + 1]
+        
+            # Draw arrow from current point to next
+            ax.annotate('', xy=(next_px, next_py), xytext=(px, py),
+                       arrowprops=dict(arrowstyle='->', color='red', lw=2))
+        
+            # Mark the point
+            ax.plot(px, py, 'ro', markersize=8)
+    
+        # Mark final point
+        ax.plot(points_list[-1][0], points_list[-1][1], 'go', markersize=10, 
+                label=f'Final: ({points_list[-1][0]:.2f}, {points_list[-1][1]:.2f})')
+    
+        # Mark minimum at (0, 0)
+        ax.plot(0, 0, 'b*', markersize=20, label=origin_label)
+    
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+        ax.set_xlabel('x')
+        ax.set_ylabel('y')
+    
+        return plt.gca()
+
+
+
+    return (generic_contour_with_gradient_path,)
+
+
+@app.cell
+def _(np):
+    delta = 0.025
+    x = np.arange(-3.0, 3.0, delta)
+    y = np.arange(-3.0,3.0, delta)
+    X, Y = np.meshgrid(x,y)
+    return X, Y
+
+
+@app.cell
+def _(X, Y, generic_contour_with_gradient_path):
+    def isotropic_bowl():
+        Z = X**2 + Y**2
+        point_x = 3
+        point_y = -1
+        learning_rate=0.3
+        points_list=[(point_x, point_y)]
+        dzdx = 2*point_x
+        dzdy = 2*point_y
+        newx = point_x - learning_rate * dzdx
+        newy = point_y - learning_rate * dzdy
+        points_list.append((newx,newy))
+        for _ in range (5):
+            dzdx = 2 * newx
+            dzdy = 2 * newy
+            newx = newx - learning_rate * dzdx
+            newy = newy - learning_rate * dzdy
+            points_list.append((newx,newy))
+        return generic_contour_with_gradient_path(X,Y,Z,points_list, "Gradient Descent on bowl $Z=X^2 + Y^2$")
+    isotropic_bowl()
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(text="The isotropic bowl is pretty well behaved, as long as the learning rate is reasonable it will converge in a straight line to the global minimum. If LR is very large it will explode.")
+    return
+
+
+@app.cell
+def _(generic_contour_with_gradient_path, np):
+    def narrow_ravine():
+        learning_rate=.09
+        delta = 0.025
+        x = np.arange(-3.0, 3.0, delta)
+        y = np.arange(-3.0,3.0, delta)
+        X, Y = np.meshgrid(x,y)
+        Z = X**2 + 10*Y**2
+    
+        point_x = -3
+        point_y = 1
+        points_list=[(point_x, point_y)]
+        dzdx = 2*point_x
+        dzdy = 20*point_y
+        newx = point_x - learning_rate * dzdx
+        newy = point_y - learning_rate * dzdy
+        points_list.append((newx,newy))
+        for _ in range (15):
+            dzdx = 2 * newx
+            dzdy = 20 * newy
+            newx = newx - learning_rate * dzdx
+            newy = newy - learning_rate * dzdy
+            points_list.append((newx,newy))
+        return generic_contour_with_gradient_path(X,Y,Z,points_list, "Gradient Descent on narrow ravine $Z=X^2 + 10Y^2$")
+    narrow_ravine()
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(text="The descent oscillates back and forth across the ravine, and does not make it to the global min after 15 steps. Changing the LR larger can lead to non-convergence. Smaller will fall even further short of the minimum in the given number of steps. Ravines come from very unequal eigenvalues")
+    return
+
+
+@app.cell
+def _(generic_contour_with_gradient_path, np):
+    def saddle():
+        learning_rate=.03
+        delta = 0.025
+        x = np.arange(-3.0, 3.0, delta)
+        y = np.arange(-3.0,3.0, delta)
+        X, Y = np.meshgrid(x,y)
+        Z = X**2 - Y**2
+    
+        point_x = -3
+        point_y = 1
+        points_list=[(point_x, point_y)]
+        dzdx = 2*point_x
+        dzdy = -2*point_y
+        newx = point_x - learning_rate * dzdx
+        newy = point_y - learning_rate * dzdy
+        points_list.append((newx,newy))
+        for _ in range (15):
+            dzdx = 2 * newx
+            dzdy = -2 * newy
+            newx = newx - learning_rate * dzdx
+            newy = newy - learning_rate * dzdy
+            points_list.append((newx,newy))
+        return generic_contour_with_gradient_path(X,Y,Z,points_list, "Gradient Descent on saddle $Z=X^2 - Y^2$", "Saddle point (0,0)")
+    saddle()
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(text="With the saddle we veer off into negative infinity in the y direction. The only way to reach the saddle is to start with y=0, but that will still be unstable. If x and y = 0 we could land on the saddle point, but is unlikely to get stuck there in practice.")
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(text="All three behaviors follow from solving the same constrained linear problem under different local curvature geometries.")
+    return
+
+
+@app.cell
+def _():
+    return
+
+
+if __name__ == "__main__":
+    app.run()
