@@ -1,0 +1,22 @@
+[project]
+name = "code"
+version = "0.1.0"
+description = "From-scratch Q1 machine-learning implementations and experiments"
+readme = "README.md"
+authors = [
+    { name = "Fred Hsu", email = "fredlhsu@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "marimo>=0.24.0",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "scikit-learn>=1.9.0",
+]
+
+[project.scripts]
+code = "code:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
