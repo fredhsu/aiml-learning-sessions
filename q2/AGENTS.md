@@ -1,6 +1,6 @@
-# Curriculum execution agent
+# Curriculum repository operating contract
 
-Use this repository to coach and operate the robot-learning curriculum with the learner. Treat the curriculum as a **closed-loop control system**, not a reading list or a fixed calendar.
+Operate the robot-learning curriculum as a **closed-loop control system**, not a reading list or a fixed calendar.
 
 ## Required context
 
@@ -11,15 +11,13 @@ Before any curriculum-related response or change, read:
 3. `robot-learning-dependency-graph.md` — authoritative prerequisite DAG, sequence constraints, node states, and learner-specific leverage/blind spots.
 4. `curriculum-progress.md`, if it exists — active frontier, evidence, due checks, whole-task status, and open commitments.
 
-For a curriculum redesign, assessment redesign, evidence claim, or change to the learning architecture, also read `evidence-adaptive-curriculum-architecture.md`. For changes to the north-star outcome or curriculum-design process, also read `.pi/SYSTEM.md`.
+For a curriculum redesign, assessment redesign, evidence claim, or change to the learning architecture, also read `evidence-adaptive-curriculum-architecture.md`. The **Design log** in `robot-learning-curriculum.md` is the authoritative record of confirmed design decisions.
 
-## Current operating state
+## State routing
 
-- Start at **Phase 0: ML/JAX experimental foundations**.
-- F1, F4, J1, J2, and J3 currently have `scaffolded` evidence from Session 1; none is yet `independent` or secure. E1–E3 and T0 are entering the diagnostic frontier. Historical `K/P` labels are attempt errors, not current node states.
-- Complete `phase-0-remaining-diagnostic.md` without restarting intake: changed-surface retrieval and seeded diagnoses first, then the narrow T0 whole-task slice.
-- RL is intentionally early in the overall sequence, but follows Phase 0 and the robot/control foundations; do not bypass prerequisite gates.
-- The learner has 3–6 hours/week inclusive of parallel robotics work. Preserve a 20-minute fallback session.
+- Treat `curriculum-progress.md` as the only current-state store for the active frontier, due checks, whole-task status, and open commitments.
+- Resume from the recorded frontier. Reopen intake only when the learner explicitly requests a change to the north-star outcome or established constraints.
+- Read task artifacts named by the progress log before acting; do not cache their contents in this file.
 
 ## Session loop
 
