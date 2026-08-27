@@ -159,7 +159,7 @@ flowchart TD
 | F3 | Probability, estimation, distributions, sampling | conceptual + procedural | — | Familiarity → fluency for expectations/variance | Loss, uncertainty, metric interpretation | `not-assessed` |
 | F4 | Log-sum-exp, precision, overflow, conditioning | conceptual + procedural | F1 | **Fluency** for common patterns | Stable losses; NaN/Inf tests | `scaffolded` |
 | F5 | Optimisation: SGD/Adam behaviour, curvature, regularisation, learning curves | conceptual + procedural | F2, F3, F4, J3 | Familiarity initially | Controlled optimiser comparisons and curve diagnosis | `not-assessed` |
-| J1 | Arrays, pytrees, PRNG keys, `jit`, `vmap` | procedural | F1 | **Fluency** for standard use | All later JAX implementations | `scaffolded` |
+| J1 | Arrays, pytrees, PRNG keys, `jit`, `vmap` | procedural | F1 | **Fluency** for standard use | All later JAX implementations | `scaffolded` for arrays/pytrees/PRNG; `not-encoded` for `jit`/`vmap` |
 | J2 | `grad`, `value_and_grad`, JVP/VJP, transform composition | conceptual + procedural | F2, J1 | Fluency for `value_and_grad`; familiarity for JVP/JVP composition | Gradient tests; loss/update implementation | `scaffolded` |
 | J3 | Functional parameters, loss, gradients, update, batches | procedural | F4, J2 | **Fluency** | Every learned policy and reproduction | `scaffolded` |
 | J4 | Unit/property tests, seeds, checkpoints, configs | procedural | J1, J3 | Familiarity → fluency | Reproduce experiment runs | `scaffolded` for tests/seeds; remaining surface `not-assessed` |
