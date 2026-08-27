@@ -8,7 +8,7 @@ from types import new_class
 import jax
 import jax.numpy as jnp
 
-# B, D, C = 7, 4, 5
+B, D, C = 7, 4, 5
 
 
 def init_params(key: jax.Array, n_features: int, n_classes: int):
@@ -31,18 +31,24 @@ def stable_cross_entropy(params, x: jax.Array, y: jax.Array) -> jax.Array:
     """Return stable mean multiclass cross-entropy."""
     logits = linear_logits(params, x)
     normalizer = jax.nn.logsumexp(logits, axis=1, keepdims=True)
-    shifted = y - normalizer
-    return jnp.mean(shifted, axis=1)
+    logprobs = logits - normalizer
+    correct = jnp.take_along_axis(logprobs, y[:, None], axis=1)
+    return jnp.mean(-correct)
 
 
 def sgd_update(params, x: jax.Array, y: jax.Array, learning_rate: float):
     """Return (new_params, pre_update_loss) from one pytree SGD update."""
     # will use value_and_grad here
     # I'm unclear on the exact way to use value_and_grad
-    pre_update_loss, grad = jax.value_and_grad(stable_cross_entropy, params)
-    new_params = params - learning_rate * params * grad
-
-    return (new_params, pre_update_loss)
+    loss, grads = jax.value_and_grad(stable_cross_entropy)(params, x, y)
+    W = params["W"]
+    dW = grads["W"]
+    b = params["b"]
+    db = grads["b"]
+    new_W = W - learning_rate * dW
+    new_b = b - learning_rate * db
+    new_params = {"W": new_W, "b": new_b}
+    return (new_params, loss)
 
 
 def make_fixture(key: jax.Array):
@@ -58,9 +64,9 @@ def main():
     # x should be input of (B,D)
     # y should be output of (B) with values that are classes [0,1,2,3,4]
 
-    n_batches = 7
-    n_features = 4
-    n_classes = 5
+    n_batches = B
+    n_features = D
+    n_classes = C
     key = jax.random.key(seed=7)
 
     x, y = make_fixture(key)
