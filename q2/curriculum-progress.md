@@ -6,7 +6,7 @@
 - Learning phase: Phase 0 — ML/JAX experimental foundations.
 - Active frontier: retrieve F1, F4, J1, J2, and J3 from scaffolded evidence; sample E1–E3 and T0 through the remaining diagnostic.
 - Current node evidence: F1/F4/J2/J3 are `scaffolded`; F2 is `encoded`; J1 is `scaffolded` for arrays/pytrees/PRNG but `not-encoded` for `jit`/`vmap`; J4 is `scaffolded` for tests and seeds with remaining surface `not-assessed`; E1 is `not-encoded`.
-- Weekly hours actual: not yet tracked; log actual hours here each week against the 3–6h budget so the sustainability and parallel-load revision triggers have real data to fire on.
+- Weekly hours actual: ~2h recorded so far this week (Session 1 ~60 min; delayed diagnostic ~60 min), against the 3–6h budget. Remaining time should prioritize Task 3 rather than new material.
 - Last learner evidence: delayed-retrieval Task 1 and seeded-variant repairs verified on 2026-08-27; first attempt `7ba644ef499a01598686ff5e3bc5b76898428a09`, repair commit `3f2299f630f7ce21c7d4beb4796334951836d943`.
 - Last whole-task evidence: none; authentic mini-task remains unsampled.
 - Due check: 2026-08-26 delayed retrieval: Task 1 and all three seeded-variant tests pass after feedback (`5 passed in 1.58s`). Provisional diagnostic score is 1/4: Task 1 earns its functional point with scaffolded assistance; Task 2 earns no point because the required committed pre-execution diagnoses were incomplete; Task 3 is unattempted.
