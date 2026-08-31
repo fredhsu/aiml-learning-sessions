@@ -1,3 +1,54 @@
+# Python bytecode and interpreter caches
 __pycache__/
 *.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Test, coverage, type-checker, and linter caches
 .pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+
+# Packaging and build output
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Notebook/runtime state (the tracked marimo .py file is the durable artifact)
+__marimo__/
+.ipynb_checkpoints/
+.jax_cache/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editor and operating-system state
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
