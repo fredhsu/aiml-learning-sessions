@@ -2,7 +2,7 @@
 
 **Design stage:** confirmed working graph; evidence-gated and revisable  
 **Learning phase:** Phase 0 — ML/JAX experimental foundations  
-**Active frontier:** retrieve F1, F4, J1, J2, and J3 from scaffolded evidence; sample E1–E3 and T0 through the remaining entry diagnostic.
+**Active frontier:** encode J1 `jit`/`vmap` constraints, then fade the scaffold on F1/F4/J2/J3 and E1–E3/T0 through independent changed-surface implementation and diagnosis.
 
 The canonical vocabulary is defined in [`CONTEXT.md`](CONTEXT.md). This document records capability prerequisites separately from teaching-order preferences and milestone integration requirements.
 
@@ -163,9 +163,10 @@ flowchart TD
 | J2 | `grad`, `value_and_grad`, JVP/VJP, transform composition | conceptual + procedural | F2, J1 | Fluency for `value_and_grad`; familiarity for JVP/JVP composition | Gradient tests; loss/update implementation | `scaffolded` |
 | J3 | Functional parameters, loss, gradients, update, batches | procedural | F4, J2 | **Fluency** | Every learned policy and reproduction | `scaffolded` |
 | J4 | Unit/property tests, seeds, checkpoints, configs | procedural | J1, J3 | Familiarity → fluency | Reproduce experiment runs | `scaffolded` for tests/seeds; remaining surface `not-assessed` |
-| E1 | Split unit, leakage, preprocessing, lineage | conceptual + procedural | — | **Fluency** for split-before-fit | Every dataset and policy-training run | `not-encoded` |
-| E2 | Metrics, uncertainty, success and safety criteria | conceptual + discriminative | F3 | Familiarity → fluency in selection | Metric defence; intervals; failure slices | `not-assessed` |
-| E3 | Baselines, ablations, error analysis, records | whole-task | E1, E2, J4 | Fluency for minimum experiment template | All whole-task reports | `not-assessed` |
+| E1 | Split unit, leakage, preprocessing, lineage | conceptual + procedural | — | **Fluency** for split-before-fit | Every dataset and policy-training run | `scaffolded` |
+| E2 | Metrics, uncertainty, success and safety criteria | conceptual + discriminative | F3 | Familiarity → fluency in selection | Metric defence; intervals; failure slices | `scaffolded` for imbalanced binary classification |
+| E3 | Baselines, ablations, error analysis, records | whole-task | E1, E2, J4 | Fluency for minimum experiment template | All whole-task reports | `scaffolded` |
+
 | C1 | Frames, forward/differential kinematics, workspace, action conventions | conceptual + procedural | F1 | Familiarity → fluency for frame transforms | Calibration and simulator interface design | `not-encoded` |
 | C2 | State, dynamics, discretisation, integration, actuator limits | conceptual + procedural | F1, F2 | Familiarity | Explain rollout divergence | `not-encoded` |
 | C3 | Feedback error, stability intuition, trajectories, PID, saturation | conceptual + procedural | C1, C2 | Fluency for simple controller design | Scripted manipulation baseline | `not-encoded` |
@@ -181,7 +182,7 @@ flowchart TD
 | L5 | Training and rollout diagnosis | perceptual-discriminative + whole-task | E3 and at least one of L2/L4; L3 for vision diagnosis | **Fluency** in failure classification | Curated failure log and ablations | `not-assessed` |
 | X1 | Analyse mechanism, assumptions, load-bearing claims | conceptual + discriminative | F2–F5, C4, L4 | Familiarity → independent | Explain component before reproducing | `not-encoded` |
 | X2 | Reimplement and ablate a paper mechanism in JAX | whole-task | X1, J3, E3 | Independent | Reproduction and benchmark comparison | `not-assessed` |
-| T0 | Leakage-safe tabular baseline | whole-task | J3, E1–E3, L1 | Independent with checklist | Retrieves Phase 0 nodes | `not-assessed` |
+| T0 | Leakage-safe tabular baseline | whole-task | J3, E1–E3, L1 | Independent with checklist | Retrieves Phase 0 nodes | `scaffolded` narrow vertical slice |
 | T1 | State-based simulated control with scripted baseline | whole-task | C1–C3, S1 | Independent with scaffolded task definition | Retrieves control, simulation, metrics | `not-assessed` |
 | T2 | Demonstration-trained policy | whole-task | L2, E3 | Independent with fading scaffold | Retrieves data, JAX, rollouts | `not-assessed` |
 | T3A | Shifted-condition policy transfer | whole-task | L5 and at least one of R1/T2; L3 for vision route | Independent transfer | Changed environment, observations, or requirements | `not-assessed` |

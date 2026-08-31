@@ -4,14 +4,14 @@
 
 - Design stage: approved working curriculum, version 0.2.
 - Learning phase: Phase 0 — ML/JAX experimental foundations.
-- Active frontier: retrieve F1, F4, J1, J2, and J3 from scaffolded evidence; sample E1–E3 and T0 through the remaining diagnostic.
-- Current node evidence: F1/F4/J2/J3 are `scaffolded`; F2 is `encoded`; J1 is `scaffolded` for arrays/pytrees/PRNG but `not-encoded` for `jit`/`vmap`; J4 is `scaffolded` for tests and seeds with remaining surface `not-assessed`; E1 is `not-encoded`.
-- Weekly hours actual: ~2h recorded so far this week (Session 1 ~60 min; delayed diagnostic ~60 min), against the 3–6h budget. Remaining time should prioritize Task 3 rather than new material.
-- Last learner evidence: delayed-retrieval Task 1 and seeded-variant repairs verified on 2026-08-27; first attempt `7ba644ef499a01598686ff5e3bc5b76898428a09`, repair commit `3f2299f630f7ce21c7d4beb4796334951836d943`.
-- Last whole-task evidence: none; authentic mini-task remains unsampled.
-- Due check: 2026-08-26 delayed retrieval: Task 1 and all three seeded-variant tests pass after feedback (`5 passed in 1.58s`). Provisional diagnostic score is 1/4: Task 1 earns its functional point with scaffolded assistance; Task 2 earns no point because the required committed pre-execution diagnoses were incomplete; Task 3 is unattempted.
-- Next whole-task block: complete Task 3 from the remaining diagnostic within the same study week; this is the first narrow T0 vertical slice.
-- Open commitments: complete Task 3 with a predeclared metric and leakage-safe data protocol. Schedule the resulting 7–14 day delayed check only after the diagnostic and T0 slice yield qualifying evidence.
+- Active frontier: encode J1 `jit`/`vmap` constraints, then fade the scaffold on F1/F4/J2/J3 and E1–E3/T0 through independent changed-surface implementation and diagnosis.
+- Current node evidence: F1/F4/J2/J3 are `scaffolded`; F2 is `encoded`; J1 is `scaffolded` for arrays/pytrees/PRNG but `not-encoded` for `jit`/`vmap`; J4 is `scaffolded` for tests/seeds and one-command reproduction; E1/E3 and the narrow T0 slice are `scaffolded`; E2 is `scaffolded` for imbalanced binary classification.
+- Weekly hours actual: ~4h recorded this week (Session 1 ~60 min; Tasks 1–2 diagnostic ~60 min; Task 3 ~120 min piecemeal), within the 3–6h budget.
+- Last learner evidence: Task 3 leakage-safe tabular vertical slice verified on 2026-08-27; first attempt `a2c1a2d`, tutor-supplied checks `4 passed in 3.55s`, and fixed-seed reproduction recorded in `task3_experiment_record.md`.
+- Last whole-task evidence: narrow T0 vertical slice on 2026-08-27 — split-before-fit standardisation, majority and learned baselines, predeclared balanced accuracy, held-out class recalls, and fixed-seed reproduction; all produced with scaffolded assistance.
+- Due check: no phase-gate delayed check is scheduled yet because no qualifying independent/transfer attempt exists. The next independent changed-surface attempt must precede a 7–14 day delayed check.
+- Next whole-task block: an independent changed-surface T0 attempt after bounded JIT/static-shape encoding and focused `P` remediation.
+- Open commitments: independently diagnose the prior three bug classes from invariants; reconstruct loss/update under a changed surface; apply split-before-fit and metric selection with faded guidance; clean generated files accidentally included in `a2c1a2d` without deleting intentional environment/skill files.
 
 ## 2026-08-24 — Phase 0 / J1, F1, F4, J2 → J3
 - Session card: Implement a deterministic pure-JAX full-batch three-class linear classifier: synthetic data, small-normal initialisation, stable cross-entropy, `value_and_grad` + pytree SGD update, and fixed-seed training.
@@ -54,11 +54,24 @@
 - Session card: closed-resource reconstruction of stable multiclass loss and one JAX pytree update on `B=7, D=4, C=5`; diagnose and repair three seeded variants before the T0 vertical slice.
 - Prediction: score 4/4; time 30 min; confidence 70%
 - Evidence: first attempt committed before tests as `7ba644ef499a01598686ff5e3bc5b76898428a09` (`phase_0_diagnostic_attempt.py`, `phase_0_diagnostic_notes.md`); repair commit `3f2299f630f7ce21c7d4beb4796334951836d943`. `uv run pytest -q test_phase_0_diagnostic.py` → `5 passed in 1.58s`. `phase_0_diagnostic_notes.md` records the repairs and the Variant 3 `ConcretizationTypeError`.
-- Actual: provisional score 1/4; time ~60 min. Task 1 earns 1/1 with scaffolded assistance; Task 2 earns 0/1 because the committed pre-execution diagnosis condition was not met for all variants; Tasks 3–4 are unattempted.
-- Assistance: Task 1 final correction `scaffolded` (post-commit test harness, API-reference lookup, and shape/loss feedback). Variant 1 repair was based on its pre-execution axis prediction but the full debugging point is unscored; Variant 2 required direct shape feedback; Variant 3 remains open.
+- Actual: final diagnostic score 3/4; total time ~180 min. Task 1 earns 1/1 with scaffolded assistance; Task 2 earns 0/1 because the committed pre-execution diagnosis condition was not met for all variants; Tasks 3–4 earn 2/2 with scaffolded assistance and reproducible held-out evidence.
+- Assistance: Task 1 final correction `scaffolded` (post-commit test harness, API-reference lookup, and shape/loss feedback). Variant 1 repair used its pre-execution axis prediction, Variant 2 required direct shape feedback, and Variant 3 required static-shape instruction; the full debugging point is unscored. Tasks 3–4 are `scaffolded` due repeated contract reviews, adapted prior classifier code, and tutor-supplied tests.
 - Attempt errors: `P` — Task 1 used labels rather than logits in log-probability construction, producing `(B,B)` broadcasting and an out-of-bounds gather/NaN; Variant 2 initially used batch size for bias shape. `K` — Variant 3 static-shape invariant under `jit` was unavailable; `jnp.unique(y)` requires data values while tracing. `C` — Variant 3 diagnosis and taxonomy were absent from the committed first attempt; its later error-code field contained an expression rather than `K/R/M/D/P/F/T/C`.
 - Node-state transitions: J1 `scaffolded → scaffolded` for arrays/pytrees/PRNG with `jit`/`vmap` surface recorded `not-encoded`; no advancement. F1/F4/J2/J3 remain `scaffolded`; F2 remains `encoded`.
-- Calibration gap: time +30 min (actual about twice the 30-min prediction); score currently -3/4 versus prediction, but is incomplete until Task 3 is attempted.
-- Due checks / whole-task status: delayed retrieval remains open; no authentic T0 evidence. Task 3 is still required this study week.
-- Decision / next smallest action: record actual elapsed time, then start Task 3 with a pre-run metric and data-protocol prediction; no Phase 0 node advances from the scaffolded retrieval repair alone.
-- Graph or curriculum change: `robot-learning-dependency-graph.md` J1 evidence state refined to distinguish scaffolded arrays/pytrees/PRNG from unencoded `jit`/`vmap`; this is an evidence-state correction, not a prerequisite or architecture change.
+- Calibration gap: initial diagnostic prediction was 4/4 in 30 min; actual was 3/4 in ~180 min (score −1/4; time +150 min). Task 3 separately predicted 2/2 in 45 min at 70% confidence and achieved 2/2 in ~120 min (time +75 min).
+- Due checks / whole-task status: remaining entry diagnostic complete; narrow T0 evidence now exists but is scaffolded, so it does not start the phase-gate delayed-check clock.
+- Decision / next smallest action: apply `K` remediation to the JIT static-shape model, then a focused faded-skeleton `P` drill before an independent changed-surface loss/debug/data-protocol attempt.
+- Graph or curriculum change: evidence-state updates only: J1 distinguishes scaffolded arrays/pytrees/PRNG from unencoded `jit`/`vmap`; E1/E3 and narrow T0 `not-assessed/not-encoded → scaffolded`; E2 `not-assessed → scaffolded` for imbalanced binary classification. No prerequisite or architecture change.
+
+## 2026-08-27 — Phase 0 / Task 3 narrow T0 vertical slice
+- Session card: build a fixed-seed, leakage-safe binary tabular experiment with row-level IID split, train-only standardisation, majority and JAX linear baselines, predeclared balanced accuracy, held-out class-recall slices, and one-command reproduction.
+- Prediction: score 2/2; time 45 min; confidence 70%
+- Evidence: first attempt `a2c1a2d`; `uv run pytest -q test_task3_tabular_experiment.py` → `4 passed in 3.55s`; `uv run python task3_tabular_experiment.py` → train/test 168/72, test counts 52/20, scaler fit rows 168, majority balanced accuracy 0.5, learned balanced accuracy 1.0, recalls 1.0/1.0, target met. Artifact: `task3_experiment_record.md`.
+- Actual: score 2/2; time ~120 min, completed piecemeal
+- Assistance: `scaffolded` for both points — reused/adapted prior classifier code, received repeated data/metric/model contract reviews, and ran tutor-supplied post-commit tests.
+- Attempt errors: `P` — initial balanced-accuracy/class-recall implementation, model-bias omission, and incomplete pipeline wiring required focused corrections. `C` — first-attempt commit included unrelated/generated files.
+- Node-state transitions: E1 `not-encoded → scaffolded`; E2 `not-assessed → scaffolded` for imbalanced binary classification; E3 `not-assessed → scaffolded`; T0 `not-assessed → scaffolded` narrow vertical slice. J4 remains `scaffolded`, now with one-command fixed-seed reproduction evidence.
+- Calibration gap: score exact; time +75 min versus prediction.
+- Due checks / whole-task status: first narrow T0 whole-task evidence recorded. No phase-gate delayed check scheduled because assistance prevents an independent/transfer claim.
+- Decision / next smallest action: encode JIT static-shape constraints, perform focused `P` remediation, then repeat a changed-surface mechanism/debug/data-protocol attempt with faded guidance.
+- Graph or curriculum change: evidence-state updates listed above; no edge or curriculum change.
