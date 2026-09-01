@@ -1,0 +1,24 @@
+{
+  "checksum": 134215576.0,
+  "contract": "W0",
+  "device": "NVIDIA GeForce RTX 4090",
+  "effective_source_read_gbps": {
+    "mean": 919.9867116033358,
+    "p50": 948.648310643365,
+    "p90": 949.5490049379213,
+    "p99": 950.1809733938451
+  },
+  "elapsed_ms": {
+    "mean": 1.3502573633256059,
+    "p50": 1.1318650067551062,
+    "p90": 1.1441822745837271,
+    "p99": 5.742746857868047
+  },
+  "operation": "torch.sum(float32) over one contiguous CUDA float32 tensor",
+  "repetitions": 30,
+  "source_bytes_per_rep": 1073741824,
+  "synchronization": "torch.cuda.synchronize after every warmup and timed repetition",
+  "torch": "2.13.0+cu130",
+  "torch_cuda": "13.0",
+  "warmup": 10
+}

@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# measurement outputs: keep the contract and the summary, not the raw dumps
+bench/raw/
+*.nsys-rep
+*.ncu-rep
+*.json.gz
+traces/
+
+# model weights and caches
+models/
+*.safetensors
+*.gguf
+.hf_cache/

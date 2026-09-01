@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inference Engineering — Session Review, 2026-08-31</title>
+  <style>
+    :root { color-scheme: dark; --bg: #101419; --panel: #18212b; --text: #e7edf4; --muted: #aab8c6; --accent: #74d5b2; --warn: #ffd479; --border: #2d3b49; }
+    body { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, sans-serif; }
+    h1, h2 { line-height: 1.2; } h2 { margin-top: 2rem; color: var(--accent); }
+    .meta, .note { color: var(--muted); } .card { padding: 1rem 1.25rem; margin: 1rem 0; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
+    .warning { border-left: 4px solid var(--warn); } code { color: var(--accent); } table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: .55rem; border-bottom: 1px solid var(--border); text-align: left; } th { color: var(--muted); }
+    .formula { overflow-x: auto; padding: .7rem; background: #0c1014; border-radius: 5px; font-family: ui-monospace, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Inference Engineering — Session Review</h1>
+  <p class="meta">2026-08-31 · Phase 0: measurement and inference arithmetic</p>
+
+  <h2>Evidence status</h2>
+  <div class="card">
+    <ul>
+      <li>A2/A3 inference arithmetic: <strong>scaffolded</strong>.</li>
+      <li>A1 closed-resource entry diagnostic: incomplete.</li>
+      <li>H1 hardware: a W0 constant was measured, but independent learner competence is not claimed.</li>
+      <li>M3 profiling: not yet taught or assessed.</li>
+    </ul>
+  </div>
+
+  <h2>Model and KV-cache accounting</h2>
+  <table>
+    <tr><th>Quantity</th><th>Value</th></tr>
+    <tr><td>GQA KV width, <code>d<sub>kv</sub></code></td><td>8 × 64 = 512</td></tr>
+    <tr><td>Attention parameters / block</td><td>10,485,760</td></tr>
+    <tr><td>Gated-MLP parameters / block</td><td>50,331,648</td></tr>
+    <tr><td>Total parameters</td><td>1,235,746,816, excluding norms</td></tr>
+    <tr><td>bf16 parameter bytes</td><td>2.301 GiB</td></tr>
+    <tr><td>KV cache</td><td>32,768 B/token; 128 MiB for 4,096 tokens per sequence</td></tr>
+  </table>
+  <div class="formula">KV bytes/token = 2<sub>K,V</sub> × layers × KV heads × head dim × bytes/element</div>
+
+  <h2>Batch-1 decode cost model</h2>
+  <p>For 2,048 context tokens:</p>
+  <table>
+    <tr><th>Quantity</th><th>Value</th></tr>
+    <tr><td>KV read</td><td>64 MiB</td></tr>
+    <tr><td>Approximate bytes / decode step</td><td>2.5386 GB/token</td></tr>
+    <tr><td>Approximate FLOPs / decode step</td><td>2.740 GFLOPs</td></tr>
+    <tr><td>Arithmetic intensity</td><td>1.08 FLOP/B</td></tr>
+  </table>
+  <div class="card warning">
+    <strong>Key correction:</strong> reading weights is not an alternative to doing matrix multiplication; it is required to do it. At batch 1, a bf16 weight supports roughly one FMA: 2 FLOPs per 2 bytes, or about 1 FLOP/B. Low weight reuse makes decode plausibly memory-bandwidth-bound.
+  </div>
+
+  <h2>W0 bandwidth measurement</h2>
+  <p>Contract <code>W0</code> measured a 1 GiB contiguous CUDA float32 reduction with 10 warmups, 30 synchronized samples, and unlocked clocks.</p>
+  <table>
+    <tr><th>Metric</th><th>Result</th></tr>
+    <tr><td>Committed prediction</td><td>1 GB/s ±10%, basis: guess</td></tr>
+    <tr><td>Measured effective source-read bandwidth, p50</td><td>948.648 GB/s</td></tr>
+    <tr><td>Calibration gap</td><td>948.648× higher than predicted</td></tr>
+    <tr><td>Latency p50 / p99</td><td>1.132 ms / 5.743 ms</td></tr>
+  </table>
+  <p>The honest explanation for the prediction miss: <strong>no physical scale model existed before the run</strong>. The W0 value is contract-specific, not a universal claim about all RTX 4090 workloads.</p>
+
+  <h2>Measurement discipline</h2>
+  <ul>
+    <li>Declare a workload contract and prediction before every measurement.</li>
+    <li>Report distributions, not just means.</li>
+    <li>Do not call a bottleneck without arithmetic or profiler evidence.</li>
+    <li>Do not double-count context: the 2,048-token KV cost was already in the decode-byte model.</li>
+  </ul>
+
+  <h2>Next session</h2>
+  <p>Encode M1/M2 through a worked benchmark-confound contrast, then retry A1 on an alternate model configuration closed-resource.</p>
+
+  <p class="meta">Evidence and reproduction: <code>curriculum-progress.md</code>, <code>bench/workload-contract.md</code>, <code>bench/constants.md</code>, and <code>bench/results/W0-2026-08-31.json</code>.</p>
+</body>
+</html>
