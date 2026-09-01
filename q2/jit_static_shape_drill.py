@@ -80,14 +80,18 @@ def main():
     new_params2, new_loss2 = update(params, x2, y2, 0.01)
     _, grads = jax.value_and_grad(stable_loss)(params, x, y)
     assert new_loss2.shape == ()
-    for p, g, updated in zip(
+    for value in (loss, new_loss, new_loss2):
+        assert bool(jnp.isfinite(value))
+    for p, g, updated, updated2 in zip(
         jax.tree.leaves(params),
         jax.tree.leaves(grads),
         jax.tree.leaves(new_params),
+        jax.tree.leaves(new_params2),
     ):
-        assert p.shape == g.shape == updated.shape
+        assert p.shape == g.shape == updated.shape == updated2.shape
         assert bool(jnp.all(jnp.isfinite(g)))
         assert bool(jnp.all(jnp.isfinite(updated)))
+        assert bool(jnp.all(jnp.isfinite(updated2)))
 
     try:
         count = bad_unique_count(y)
