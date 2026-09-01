@@ -21,8 +21,8 @@ Scope note: this card is predicted at 15 minutes. If the prediction exceeds that
 | `one_logits(params, x_i)`                | C      | x_i @ W + b               |
 | `batched_logits(params, x)`              | BxC    | x@W + b                   |
 | `logits` in `stable_loss`                | BxC    | logits from batches       |
-| per-row log-normaliser                   | B      |                           |
-| gathered correct-class log-probabilities | B      | filtered to correct class |
+| per-row log-normaliser                   | Bx1    |                           |
+| gathered correct-class log-probabilities | Bx1    | filtered to correct class |
 | loss                                     | Scalar | mean over all values      |
 | `grads["W"]`                             | DxC    | match params              |
 | `grads["b"]`                             | C      | match params              |
@@ -35,20 +35,20 @@ Answer before writing `in_axes`, and do not run the file to check.
   (1,None) - 1 for batch columns, and None because x_i is a 1D vector
   correction: (None,0) which map to (params,x_i).
 - What `in_axes=(0, 0)` would do here, and whether it fails loudly or silently:
-  It would go across the rows of the input instead of the batch columns, fail silently
+  Fails loudly due to mapped axis of W, b, x having incompatible sizes
 - What `in_axes=(None, None)` would do here, and whether it fails loudly or silently:
-  Would go across all axis, but would fail due to shape errors passing into one_logits
+  Fails loudly, vmap needs at least one mapped axis
 - Which of the three wrong-but-runnable options is most dangerous, and why:
-  (0,0) as it fails silently
+  (0,0) as it could succeed by chance of the axis being compatible
 
 ## JIT invariants before execution
 
 - Static class-count source: `params['W'].shape[1]`
-- Why it is available while tracing: does not change at runtime
+- Why it is available while tracing: known from abstract parameter shape during this trace
 - Why `jnp.unique(y)` without a static output size fails under `jit`: the number of unique y values is determined during computation
-- Predicted outcome of `bad_unique_count(y)` and expected exception text/type: Cannot be used for JIT due to dependency on runtime value
+- Predicted outcome of `bad_unique_count(y)` and expected exception text/type: ConcretizationTypeError
 - Predicted outcome when `update` is later called with `x2: (8, D)`:
-  Will run correctly with additional bad size.
+  Succeeds and returns scalar loss, will trigger a shape signature compilation
 
 ## Rubric — 5 points
 

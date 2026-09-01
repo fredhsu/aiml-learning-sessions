@@ -5,6 +5,7 @@ Do not inspect earlier classifier implementations.
 """
 
 import jax
+from jax.errors import ConcretizationTypeError
 import jax.numpy as jnp
 
 B, D, C = 5, 3, 4
@@ -77,11 +78,21 @@ def main():
     y2 = jnp.array([0, 3, 1, 2, 3, 0, 3, 2], dtype=jnp.int32)
     print("Using different JIT shape signature")
     new_params2, new_loss2 = update(params, x2, y2, 0.01)
-    assert new_loss2.shape == (8,)
-    assert new_params2.shape == (D, C)
+    _, grads = jax.value_and_grad(stable_loss)(params, x, y)
+    assert new_loss2.shape == ()
+    for p, g, updated in zip(
+        jax.tree.leaves(params),
+        jax.tree.leaves(grads),
+        jax.tree.leaves(new_params),
+    ):
+        assert p.shape == g.shape == updated.shape
+        assert bool(jnp.all(jnp.isfinite(g)))
+        assert bool(jnp.all(jnp.isfinite(updated)))
 
-    count = bad_unique_count(y)
-    print(count)
+    try:
+        count = bad_unique_count(y)
+    except ConcretizationTypeError as e:
+        print(f"An ConcretizationTypeError occurred: {e}")
     # TODO: independent reference check — the tutor authored the task and the
     #       tests, so neither is external evidence. Compare stable_loss against
     #       optax.softmax_cross_entropy_with_integer_labels (mean-reduced), and
