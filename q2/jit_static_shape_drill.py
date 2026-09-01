@@ -27,14 +27,16 @@ def one_logits(params, x_i: jax.Array) -> jax.Array:
 #       leading (batch) axis is mapped. Write in_axes yourself; do not guess it
 #       by running the file. Record in the notes what in_axes=(0, 0) and
 #       in_axes=(None, None) would each do before you choose.
-batched_logits = jax.vmap(one_logits, in_axes=(1, None))
+batched_logits = jax.vmap(one_logits, in_axes=(None, 0))
 
 
 def stable_loss(params, x: jax.Array, y: jax.Array) -> jax.Array:
     """Return mean stable multiclass CE; x: (B, D), y: (B,)."""
     logits = batched_logits(params, x)
-    out = jax.nn.logsumexp(logits, axis=1)
-    return jnp.mean(out.sum())
+    normalizer = jax.nn.logsumexp(logits, axis=-1, keepdims=True)
+    log_probs = logits - normalizer
+    correct = jnp.take_along_axis(log_probs, y[:, None], axis=-1)
+    return -jnp.mean(correct)
 
 
 @jax.jit
@@ -42,7 +44,7 @@ def update(params, x: jax.Array, y: jax.Array, learning_rate: float):
     """Return (new_params, pre_update_loss) with unchanged pytree shapes."""
     values, grads = jax.value_and_grad(stable_loss)(params, x, y)
     new_params = jax.tree.map(
-        lambda p, grad: (p["W"] - grad * learning_rate, p["b"] - grad * learning_rate),
+        lambda p, g: p - learning_rate * g,
         params,
         grads,
     )
@@ -65,15 +67,14 @@ def main():
     logits = batched_logits(params, x)
     assert logits.shape == (B, C)
     loss = stable_loss(params, x, y)
-    assert loss.shape == (B,)
+    assert loss.shape == ()
     # TODO: apply update, then assert loss and every parameter leaf are finite
     #       and preserve their initial shapes.
     new_params, new_loss = update(params, x, y, 0.01)
-    assert new_loss.shape == (B,)
-    assert new_params.shape == (D, C)
+    assert new_loss.shape == ()
 
     x2 = jax.random.normal(key_x2, (8, D))
-    y2 = jnp.array([0, 3, 1, 2, 3], dtype=jnp.int32)
+    y2 = jnp.array([0, 3, 1, 2, 3, 0, 3, 2], dtype=jnp.int32)
     print("Using different JIT shape signature")
     new_params2, new_loss2 = update(params, x2, y2, 0.01)
     assert new_loss2.shape == (8,)

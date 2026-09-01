@@ -33,6 +33,7 @@ Answer before writing `in_axes`, and do not run the file to check.
 
 - Chosen `in_axes` for `batched_logits`, and why each entry is what it is:
   (1,None) - 1 for batch columns, and None because x_i is a 1D vector
+  correction: (None,0) which map to (params,x_i).
 - What `in_axes=(0, 0)` would do here, and whether it fails loudly or silently:
   It would go across the rows of the input instead of the batch columns, fail silently
 - What `in_axes=(None, None)` would do here, and whether it fails loudly or silently:
@@ -42,11 +43,12 @@ Answer before writing `in_axes`, and do not run the file to check.
 
 ## JIT invariants before execution
 
-- Static class-count source:
-- Why it is available while tracing:
-- Why `jnp.unique(y)` without a static output size fails under `jit`:
-- Predicted outcome of `bad_unique_count(y)` and expected exception text/type:
+- Static class-count source: `params['W'].shape[1]`
+- Why it is available while tracing: does not change at runtime
+- Why `jnp.unique(y)` without a static output size fails under `jit`: the number of unique y values is determined during computation
+- Predicted outcome of `bad_unique_count(y)` and expected exception text/type: Cannot be used for JIT due to dependency on runtime value
 - Predicted outcome when `update` is later called with `x2: (8, D)`:
+  Will run correctly with additional bad size.
 
 ## Rubric — 5 points
 
