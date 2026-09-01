@@ -97,10 +97,10 @@ doesn't matter there" without being fed absolute coordinates as extra input.*
 
 ## Links
 
-- [[Week11_S1_ImplicitBias_Math]] — bias from the *algorithm*; this week is bias
+- [[w11s1-implicit-bias-math]] — bias from the *algorithm*; this week is bias
   from the *structure* (the rowspace/nullspace decomposition reused on a
   structured operator).
-- [[Week12_S1_Conv_Math]] — the Toeplitz form, output-size formula, and four
+- [[w12s1-conv-math]] — the Toeplitz form, output-size formula, and four
   fundamental subspaces (null(K) = the filter's blind spot).
 - **Forward → Week 13 (Attention):** convolution *hard-codes* its connectivity
   (a fixed band); attention *learns* it (content-dependent mixing). Both are

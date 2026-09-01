@@ -95,7 +95,7 @@ Two Jacobians to keep straight: $\partial y / \partial x = K$ (the Toeplitz matr
 
 ## Cross-links
 
-- [[Week11_S1_ImplicitBias_Math]] — the rowspace/nullspace decomposition, reused here on a structured operator. (The W11 "weak spot" note flagged the four subspaces for refresh before W12; now closed.)
-- [[Week5_S1_GD_Euclidean]] — the metric thread. The four-subspaces orthogonality is Euclidean, as in W11.
-- [[Week4_...]] — the parameterized linear map *(fill in exact title)*. Convolution is that story with a structural constraint added.
+- [[w11s1-implicit-bias-math]] — the rowspace/nullspace decomposition, reused here on a structured operator. (The W11 "weak spot" note flagged the four subspaces for refresh before W12; now closed.)
+- [[w5s1-gd-euclidean]] — the metric thread. The four-subspaces orthogonality is Euclidean, as in W11.
+- [[w4s1-gradients-levelsets]] — the parameterized linear map *(fill in exact title)*. Convolution is that story with a structural constraint added.
 - **Forward → Week 13 (attention):** convolution *hard-codes* its connectivity (a fixed band); attention *learns* it (content-dependent mixing weights). Both are linear maps from inputs to outputs; they differ in how the mixing weights are chosen — and the query-key inner product is where the metric thread sharpens.

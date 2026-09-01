@@ -231,9 +231,9 @@ Create note: **Week11_S3_Read_ImplicitBias**
 ### Cross-links
 
 In your Obsidian system, this note should connect to:
-- `[[Week10_Landscape_Interpretation]]` — the static-geometry counterpart
-- `[[Week5_S1_GD_Euclidean]]` — the metric framing
-- `[[Week9_S4_OptimizerCheatSheet]]` — Adam's per-coordinate rescaling shows up as a deviation from min-norm in S2
+- `[[w10s3-read-landscape]]` — the static-geometry counterpart
+- `[[w5s1-gd-euclidean]]` — the metric framing
+- `[[w9s4-optimizer-cheat-sheet]]` — Adam's per-coordinate rescaling shows up as a deviation from min-norm in S2
 
 ### Output
 Create note: **Week11_ImplicitBias_Explainer**

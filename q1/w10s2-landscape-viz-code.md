@@ -2,6 +2,7 @@
 created: 2026-05-11T14:28:55Z
 id: 019e1770-e4d1-7c23-8d3c-c2c943f24526
 ---
+
 # Week 10 Session 2 - Landscape Visualization
 
 In this session I used the two moons problem as an example dataset for visualizing loss landscapes and motivating filter normalization. I began by training and plotting the loss for a naive network with a 1D slice:
@@ -152,7 +153,4 @@ These graphs are just a few slices of a larger dimensional space. We can make cl
 
 ## Open follow ups
 
-* Does the same flat\_adam produce a similar plot?
-
-* Are the eigenvalues of the projected Hessian computable?
-
+- Are the eigenvalues of the projected Hessian computable?

@@ -1,6 +1,6 @@
 # Robot-Learning Curriculum
 
-**Version:** 0.2  
+**Version:** 0.3  
 **Design stage:** approved working curriculum; evidence-gated and revisable  
 **Learning phase:** Phase 0 — ML/JAX experimental foundations  
 **Dependency graph:** [`robot-learning-dependency-graph.md`](robot-learning-dependency-graph.md)
@@ -143,6 +143,20 @@ Classify every substantive miss before altering the plan.
 
 **Dominant** means at least three instances or one-third of substantive errors across two sessions. New material labelled `K` is the active frontier, not a personal failure.
 
+## Code discrimination
+
+The remedies for `P`, `R`, and `K` diverge sharply, so a misfiled code costs a whole remediation cycle. `P` is the default sink for anything that looks like a slip; resist that. Apply these tests before assigning a code:
+
+| Question | Answer | Code |
+|---|---|---|
+| Asked immediately after the miss, can the learner state the correct procedure without looking it up? | Yes — the knowledge was present and the hands went wrong | `P` |
+| | No, but it was demonstrably encoded earlier | `R` |
+| | No, and it was never encoded | `K` |
+| Did the learner state a procedure confidently and incorrectly, holding a wrong model of the mechanism? | — | `M`, not `P` |
+| Did the learner apply a correct procedure belonging to a neighbouring case? | — | `D`, not `P` |
+
+A wrong operand, axis, or shape is `P` only when the correct one can be named on request. Substituting labels for logits, or a global reduction for a per-row one, is `M` or `R` if the learner cannot immediately say why it is wrong.
+
 # Assessment stack
 
 | Measure | Cadence | Evidence |
@@ -154,7 +168,8 @@ Classify every substantive miss before altering the plan.
 | Phase-gate delayed check | 7–14 days after the qualifying independent/transfer attempt | Alternate-form implementation or diagnosis before phase advancement |
 | Maintenance delayed measure | 4–12 weeks after a node exits active study | Alternate-form implementation or diagnosis; regression changes the node state and reopens remediation |
 | Long retention | At 6 and 12 months | Rebuild/modify a representative subsystem and run novel diagnostic experiment |
-| Calibration | Every checkpoint | Predict score/time/confidence before committing work |
+| Independence probe | Whenever a `scaffolded` node is due to fade | Closed-resource, tutor-silent attempt under the protocol in [`AGENTS.md`](AGENTS.md). This is the only route from `scaffolded` to `independent`. |
+| Calibration | Every session card | Predict score, time, and the single most likely failure mode with its expected symptom, before committing work. Log score gap, actual/predicted time ratio, and whether the failure prediction hit. |
 | Explanation defence | Each phase exit | Record technical defence of metrics, assumptions, and design choices |
 
 ## Phase exit rule
@@ -177,11 +192,12 @@ Every row is a binary gate. Performance thresholds that depend on a task or envi
 
 | Gate | Required evidence |
 |---|---|
-| Independent mechanism | Closed-resource reconstruction of stable multiclass loss and a functional JAX update on unseen `B/D/C` shapes; executable shape, finite-value, and gradient checks pass. |
+| Independent mechanism | Closed-resource reconstruction of stable multiclass loss and a functional JAX update on unseen `B/D/C` shapes, produced under an independence probe; executable shape, finite-value, and gradient checks pass; and the loss and gradients match an independent reference — a library implementation and a finite-difference gradient check — that the tutor did not author. |
 | Debugging and discrimination | Diagnose seeded global-reduction, parameter-dimension, PRNG/compilation, leakage, and metric-selection cases from invariants before execution; no unresolved critical case. |
-| Whole task / transfer | T0 runs on a fresh tabular dataset or materially changed data contract with split-before-fit preprocessing, a trivial and learned baseline, pre-declared metric, held-out result, and error slices. Any leakage invalidates the gate. |
+| Whole task / transfer | T0 runs on a fresh tabular dataset or materially changed data contract with split-before-fit preprocessing, a trivial and learned baseline, pre-declared metric, held-out result, and error slices. The task must not be separable at a 1.0 ceiling: report the primary metric with an uncertainty interval and at least one slice where the learned baseline is imperfect, or the experiment cannot discriminate a metric, slice, or leakage fault from a correct pipeline. Any leakage invalidates the gate. |
 | Delayed | After 7–14 days, rebuild or repair an alternate loss/update/data-pipeline variant without the prior implementation. Required nodes reach `delayed-secure`. |
 | Reproducibility | One clean command recreates the environment and fixed-seed result from tracked code; the record includes configuration, dependency lock, result, and explanation defence. |
+| Integration (L1) | The exit project compares the linear baseline against a learned non-linear baseline under the same split, metric, and seed protocol. L1 is an **integration requirement** of this gate, not a prerequisite of every T0 attempt; the narrow linear slice does not exercise it. |
 
 ### Phase 1 — robot and control foundations
 
@@ -271,7 +287,8 @@ The 3–6 hour budget includes parallel robotics work. Do not run two unrelated 
 | Two failed exit attempts | Audit graph dependencies; do not simply repeat phase |
 | `K`/`M` dominates | Reduce scope to prerequisite nodes; restore worked examples |
 | `R` dominates | Increase delayed closed-resource retrieval; reduce new material |
-| Calibration misses by >20 points on three assessments | Require score/time prediction every session for one macrocycle |
+| Calibration miss on three consecutive assessments, where a miss is a score error of ≥1 rubric point, an actual/predicted time ratio ≥1.5 or ≤0.67, or a wrong failure-mode prediction | Require score/time/failure-mode prediction every session for one macrocycle, and scope the next three session cards to a 15-minute predicted attempt |
+| Four consecutive attempts on the same node recorded `scaffolded` | Run an independence probe on that node before any new material touches it |
 | Whole-task work absent for two weeks | Reserve next session for integration before more theory |
 | No delayed measure in a macrocycle | Block advancement until completed |
 | Two missed weeks | Resume with fallback sessions and shrink active task; never catch up |
@@ -290,6 +307,13 @@ The 3–6 hour budget includes parallel robotics work. Do not run two unrelated 
 | Separate node state from attempt errors | Evidence maturity persists across attempts; `K/R/M/D/P/F/T/C` diagnoses only the miss that routes a remedy |
 | Split Phase 4 into T3A policy transfer and T3B paper reproduction | Makes the two evidence obligations inspectable while allowing one combined project to satisfy both |
 | Binary phase scorecards with declared thresholds | Prevents elapsed time, resource completion, or an unqualified aggregate score from being mistaken for advancement evidence |
+| Independence probes are the only route from `scaffolded` to `independent` | Fading was named as a goal but had no procedure, so every node accumulated at `scaffolded` and no phase gate was reachable. A probe makes the tutor's silence an explicit, announced contract rather than a matter of restraint. |
+| At least one check per implementation must come from a reference the tutor did not author | Tutor-supplied tests reproduce self-study's core weakness one level removed: the same agent sets the task and grades it. Library parity and finite-difference checks are cheap and genuinely external. |
+| `L1 → T0` demoted from prerequisite to an integration requirement of the Phase 0 exit gate | The narrow tabular slice used a linear model and never exercised L1, so a `scaffolded` T0 sat above a `not-assessed` prerequisite, contradicting the edge semantics. The exit project, not every T0 attempt, is where L1 must integrate. |
+| `F3 → E2` narrowed to E2's uncertainty surface | Selecting balanced accuracy under class imbalance is a discrimination skill; intervals and estimator variance are the part that actually depends on F3. Splitting the surfaces removes a second state-above-prerequisite inconsistency without deleting a real dependency. |
+| Predictions log score, time, and failure mode; confidence percentage dropped | The three serve different jobs — scope control, illusion-of-knowing detection, and a scorable metacognitive probe. A confidence percentage is only interpretable across a large set of predictions and is uncomputable at this cadence, so it was ritual. |
+| Curriculum-design sessions capped; evidence-state corrections exempt | Two of the first five progress entries recorded no learner performance. The measurement apparatus was outgrowing the thing being measured. |
+| Error codes get explicit discrimination tests | The first three sessions filed four misses as `P` while at least two look like `M`/`R`. `P` routes to skeleton drills and `R` to closed-resource retrieval, so the sink behaviour was quietly selecting the wrong remedy. |
 
 # Self-critique
 

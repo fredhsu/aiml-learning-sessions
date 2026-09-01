@@ -60,7 +60,7 @@ The Euclidean inner product enters in two places:
 The row-space lemma no longer holds under a non-Euclidean metric, and GD lands on the M-min-norm solution instead. There's nothing special about "min-norm" it depends on an implicit metric choice.
 
 **Forward to S2**: Adam's per-coordinate rescaling acts like an evolving diagonal metric, so Adam from zero should not recover the Euclidean min-norm solution. Concrete prediction to verify experimentally.
-Cross-link: [[Week5_S1_GD_Euclidean]]
+Cross-link: [[w5s1-gd-euclidean]]
 
 ## My weak spot
 

@@ -86,7 +86,7 @@ After the cold reconstruction, work it through properly.
 - CS231n "Convolutional Neural Networks" notes — `cs231n.github.io/convolutional-networks/` — spatial arrangement (stride, padding, output size), parameter sharing, the sliding-filter framing.
 - Strang, *Introduction to Linear Algebra*, Chapter 3 — the four fundamental subspaces. This is the gap-closer; read the column-space / null-space sections against your $K$ matrix specifically.
 - Goodfellow, Bengio, Courville Ch. 9.1–9.2 — the formal convolution-and-Toeplitz treatment, if you want the textbook version.
-- Your own `[[Week11_S1_ImplicitBias_Math]]` — the rowspace/nullspace decomposition you're now generalizing.
+- Your own `[[w11s1-implicit-bias-math]]` — the rowspace/nullspace decomposition you're now generalizing.
 
 ### Post-reconstruction review (10m)
 Compare your pre-reconstruction answers to what you derived. Flag specifically: did you correctly identify what lives in $\text{null}(K)$? Did you derive the output-size formula or recall it? Did you predict the gradient-summing structure of $\partial L/\partial k$, or did it surprise you? The null-space question is the one most likely to expose a gap — it's the bridge between "conv is a matrix" and "conv is a *prior*."
@@ -186,9 +186,9 @@ Create note: **Week12_S3_Read_CNN**
 ASCII or hand-drawn: the filter sliding across the input, with each position aligned to the corresponding row of the Toeplitz matrix. The goal is that "sliding dot product" and "banded matrix" read as obviously the same object.
 
 ### Cross-links
-- `[[Week4_...]]` — the parameterized linear map (find your Week 4 note's exact title)
-- `[[Week11_S1_ImplicitBias_Math]]` — the rowspace/nullspace decomposition you're reusing
-- `[[Week12_S1_Conv_Math]]` — the Toeplitz derivation and subspaces
+- `[[w4s1-gradients-levelsets]]` — the parameterized linear-map framing
+- `[[w11s1-implicit-bias-math]]` — the rowspace/nullspace decomposition you're reusing
+- `[[w12s1-conv-math]]` — the Toeplitz derivation and subspaces
 - Forward stub to Week 13 attention
 
 ### Output
