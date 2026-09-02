@@ -71,7 +71,7 @@ The main maintenance rule is: edit the file that owns the meaning instead of cop
 | [`robot-learning-dependency-graph.md`](robot-learning-dependency-graph.md) | Capability DAG, prerequisite edges, sequence constraints, integration requirements, node specifications, and strongest node evidence | A dependency, teaching order, capability definition, required level, or evidenced node state changes |
 | [`curriculum-progress.md`](curriculum-progress.md) | Active frontier, latest evidence, due checks, whole-task status, calibration, assistance, open commitments, and next action | A substantive session or evidence review completes |
 | [`evidence-adaptive-curriculum-architecture.md`](evidence-adaptive-curriculum-architecture.md) | General evidence base and architecture used to evaluate material curriculum or assessment redesigns | The research synthesis or general design framework changes |
-| [`phase-0-remaining-diagnostic.md`](phase-0-remaining-diagnostic.md) | The bounded task contract, conditions, rubric, and completion record for the current remaining diagnostic | That assessment is corrected or deliberately redesigned |
+| [`phase-0-remaining-diagnostic.md`](phase-0-remaining-diagnostic.md) | The bounded task contract, conditions, rubric, and completion record for the Phase 0 entry diagnostic, completed 2026-08-27 | That assessment is corrected or deliberately redesigned |
 | [`ai-curriculum-builder-prompt.md`](ai-curriculum-builder-prompt.md) | Standalone bootstrap prompt for designing a new curriculum from intake | The reusable curriculum-construction process changes |
 
 `ai-curriculum-builder-prompt.md` is a design asset, not part of the live Pi tutor startup. The established tutor resumes from `curriculum-progress.md`; it does not restart the builder prompt's intake sequence.
@@ -146,7 +146,7 @@ Passing output is evidence for the bounded task only. Node advancement also depe
 ├── robot-learning-curriculum.md         # outcome, phases, gates, control law
 ├── robot-learning-dependency-graph.md   # DAG, edge types, node evidence
 ├── curriculum-progress.md               # live frontier and evidence history
-├── phase-0-remaining-diagnostic.md      # active bounded assessment
+├── phase-0-remaining-diagnostic.md      # Phase 0 entry diagnostic (complete)
 ├── evidence-adaptive-curriculum-architecture.md
 ├── ai-curriculum-builder-prompt.md      # standalone design bootstrap
 ├── pi-tutor.sh                          # Pi launcher

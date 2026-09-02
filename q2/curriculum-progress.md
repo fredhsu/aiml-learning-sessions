@@ -1,17 +1,26 @@
 # Curriculum progress
 
-## Current control state — 2026-08-27
+## Current control state — 2026-09-01
 
-- Design stage: approved working curriculum, version 0.2.
+- Design stage: approved working curriculum, version 0.3.
 - Learning phase: Phase 0 — ML/JAX experimental foundations.
-- Active frontier: encode J1 `jit`/`vmap` constraints, then fade the scaffold on F1/F4/J2/J3 and E1–E3/T0 through independent changed-surface implementation and diagnosis.
-- Current node evidence: F1/F4/J2/J3 are `scaffolded`; F2 is `encoded`; J1 is `scaffolded` for arrays/pytrees/PRNG but `not-encoded` for `jit`/`vmap`; J4 is `scaffolded` for tests/seeds and one-command reproduction; E1/E3 and the narrow T0 slice are `scaffolded`; E2 is `scaffolded` for imbalanced binary classification.
-- Weekly hours actual: ~4h recorded this week (Session 1 ~60 min; Tasks 1–2 diagnostic ~60 min; Task 3 ~120 min piecemeal), within the 3–6h budget.
+- Active frontier: encode J1 `jit`/`vmap` constraints via `jit_static_shape_drill.py`, then run the first **independence probe** (protocol in `AGENTS.md`) on the loss/update mechanism.
+- Current node evidence: F1/F4/J2/J3 are `scaffolded`; F2 is `encoded`; J1 is `scaffolded` for arrays/pytrees/PRNG but `not-encoded` for `jit`/`vmap`; J4 is `scaffolded` for tests/seeds and one-command reproduction; E1/E3 and the narrow T0 slice are `scaffolded`; E2 is `scaffolded` for metric selection under binary class imbalance and `not-assessed` for uncertainty.
+- **No node has ever exceeded `scaffolded`.** Every Phase 0 gate requires independent or transfer evidence, so no gate is currently reachable and the delayed-check clock cannot start. Closing this is the top priority; it will not close by accumulating more scaffolded attempts.
+- Weekly hours actual: ~4h recorded in the week of 2026-08-24 (Session 1 ~60 min; Tasks 1–2 diagnostic ~60 min; Task 3 ~120 min piecemeal), within the 3–6h budget.
+- **Time multiplier (actual ÷ predicted):** Session 1 0.8×; diagnostic 6.0×; Task 3 2.7×. Working figure **≈3×**. Session cards are therefore scoped to a 15-minute prediction until this falls below 2×.
+- **Attempt-error tally** (all sessions to date, after the 2026-09-01 reclassification): `R`×4, `M`×1, `P`×1, `K`×2, `C`×3. Originally logged as `P`×4; see `phase_0_diagnostic_notes.md`. The distribution is a **retrieval** problem plus a **process/care** problem, not the carelessness problem the original coding implied. Remedy routing: `R` → raise closed-resource retrieval; `C` → checklist and commit-before-run rule.
 - Last learner evidence: Task 3 leakage-safe tabular vertical slice verified on 2026-08-27; first attempt `a2c1a2d`, tutor-supplied checks `4 passed in 3.55s`, and fixed-seed reproduction recorded in `task3_experiment_record.md`.
-- Last whole-task evidence: narrow T0 vertical slice on 2026-08-27 — split-before-fit standardisation, majority and learned baselines, predeclared balanced accuracy, held-out class recalls, and fixed-seed reproduction; all produced with scaffolded assistance.
-- Due check: no phase-gate delayed check is scheduled yet because no qualifying independent/transfer attempt exists. The next independent changed-surface attempt must precede a 7–14 day delayed check.
-- Next whole-task block: an independent changed-surface T0 attempt after bounded JIT/static-shape encoding and focused `P` remediation.
-- Open commitments: independently diagnose the prior three bug classes from invariants; reconstruct loss/update under a changed surface; apply split-before-fit and metric selection with faded guidance; clean generated files accidentally included in `a2c1a2d` without deleting intentional environment/skill files.
+- Last whole-task evidence: narrow T0 vertical slice on 2026-08-27, all scaffolded. **Known limitation:** the synthetic data was linearly separable at a 1.0 ceiling, so the experiment could not have discriminated a metric, slice, or leakage fault from a correct pipeline, and no uncertainty interval was computed.
+- Due check: no phase-gate delayed check is scheduled because no qualifying independent/transfer attempt exists. The first independence probe must precede a 7–14 day delayed check.
+- Next whole-task block: an independence-probe T0 attempt after the JIT/`vmap` drill.
+- Open commitments:
+  - Complete `jit_static_shape_drill.md`/`.py`, including the `vmap` `in_axes` prediction and the optax + finite-difference reference check.
+  - Run the first independence probe: reconstruct loss/update under a changed surface, learner-authored tests, tutor silent until commit.
+  - Rebuild the T0 dataset with overlapping class means so the ceiling sits near 0.75–0.85, and report the primary metric with an uncertainty interval. Leave `task3_tabular_experiment.py` intact as the historical record; build the harder version as a new artifact.
+  - Raise closed-resource retrieval in response to the dominant `R`; add a pre-flight checklist (commit before run, error code is one letter, no generated files) in response to the recurring `C`.
+  - Non-graded toolchain task: install MuJoCo/MJX and run one reset/step rollout. This is de-risking, not a second theory frontier, and it produces no node evidence.
+  - Clean generated files accidentally included in `a2c1a2d` without deleting intentional environment/skill files.
 
 ## 2026-08-24 — Phase 0 / J1, F1, F4, J2 → J3
 - Session card: Implement a deterministic pure-JAX full-batch three-class linear classifier: synthetic data, small-normal initialisation, stable cross-entropy, `value_and_grad` + pytree SGD update, and fixed-seed training.
@@ -75,3 +84,21 @@
 - Due checks / whole-task status: first narrow T0 whole-task evidence recorded. No phase-gate delayed check scheduled because assistance prevents an independent/transfer claim.
 - Decision / next smallest action: encode JIT static-shape constraints, perform focused `P` remediation, then repeat a changed-surface mechanism/debug/data-protocol attempt with faded guidance.
 - Graph or curriculum change: evidence-state updates listed above; no edge or curriculum change.
+
+## 2026-09-01 — Curriculum control update / fading mechanism, edge corrections, and calibration instruments
+
+- Session card: no learner session; curriculum review requested by the learner, executed as a single design pass.
+- Prediction: not applicable; no learner attempt.
+- Evidence: revised `AGENTS.md` (independence-probe protocol, session-card scoping, independent-reference rule, design-session cap, two-form progress schema); revised `robot-learning-curriculum.md` (code-discrimination table, revised assessment stack, precise calibration trigger, scaffold-accumulation trigger, Phase 0 scorecard, eight design-log entries); revised `robot-learning-dependency-graph.md` (`L1 → T0` removed, `F3 → E2` narrowed, integration-requirements table added, E2/T0 states corrected); annotated `phase_0_diagnostic_notes.md`; extended `jit_static_shape_drill.md`/`.py`; `optax>=0.2.4` added to `pyproject.toml` and `uv.lock` for reference checks, verified with `uv run python -c "import optax"` → `optax 0.2.8`.
+- Actual: no learner-performance claim. Existing evidence was re-typed and two over-claims were corrected; no historical score changed.
+- Assistance: not applicable.
+- Attempt errors: none classified; not a learner attempt. Three historical `P` codes were reclassified as `M`/`R` — this corrects the diagnosis of past misses, not the record of them.
+- Node-state transitions: E2 `scaffolded` → `scaffolded` for metric selection, `not-assessed` for uncertainty (no interval was ever computed). T0 unchanged in state, annotated with the 1.0-ceiling limitation. No other transitions.
+- Calibration gap: not applicable.
+- Due checks / whole-task status: unchanged; the JIT/`vmap` drill and the first independence probe remain the frontier.
+- Decision / next smallest action: complete `jit_static_shape_drill.md` predictions closed-resource, then `jit_static_shape_drill.py`, at a 15-minute predicted scope.
+- Graph or curriculum change: **material, version 0.2 → 0.3.**
+  - `L1 → T0` prerequisite **removed**; L1 becomes an integration requirement of the Phase 0 exit gate. Rationale: the narrow slice used a linear model and never exercised L1, leaving a `scaffolded` node above a `not-assessed` prerequisite, which contradicts the edge semantics in `CONTEXT.md`.
+  - `F3 → E2` **narrowed** to E2's uncertainty surface; metric selection under class imbalance does not depend on F3. Same inconsistency class as above.
+  - Affected sequence constraints: none. Affected integration requirements: Phase 0 exit gate gains an explicit L1 row and an uncertainty-interval requirement. Affected exit evidence: the Phase 0 independent-mechanism gate now additionally requires an independence probe and an external reference check; the whole-task gate now forbids a 1.0-ceiling task.
+  - Confirmed by the learner's instruction to apply the full review.

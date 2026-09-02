@@ -8,10 +8,10 @@ id: 019fe218-38e9-7339-82f2-f5af1452beab
 ### Pre-reading 
 - The query-key score is directional - provides a weighted score for the lookup of V.
 - The score is how much to attend, the value is the actual target being attended to
-- The paper does not go into specifics on the reasoning behind the different maps, however my work in [[w13s1]] goes deeper than the paper.
+- The paper does not go into specifics on the reasoning behind the different maps, however my work in [[w13s1-attention-math]] goes deeper than the paper.
 ### Separate Q and K
 - Having a separate $W_Q, W_K$ allows the score matrix to be asymmetric. 
-- $S_{i,j} = x_i^T M x_j$ is a bilinear form with $M=W_Q^T W_K$. This is related to the thread on metrics and inner products from [[w4s2]].
+- $S_{i,j} = x_i^T M x_j$ is a bilinear form with $M=W_Q^T W_K$. This is related to the thread on metrics and inner products from [[w4s2-gradient-geometry-code]].
 - This asymmetry allows $i$ to attend to $j$ without $j$ attending to $i$
 - My initial read on this was incorrect, I was assigning the asymmetry to the attention matrix A, not hte score matrix S. A is asymmetric in general since it comes after the row-wise softmax, and its asymmetry is independent of S.
 
@@ -51,4 +51,4 @@ Here are some areas that I got mixed up to keep clear in the future. These may b
   Does the linear-offset / relative-position structure survive two axes, or does
   ViT just learn it?
 - Does the multi-head ≈ conv-channels analogy actually hold up?
-- Residual connections in the transformer → [[w10s3]] — skip connections and loss-landscape smoothing
+- Residual connections in the transformer → [[w10s3-read-landscape]] — skip connections and loss-landscape smoothing

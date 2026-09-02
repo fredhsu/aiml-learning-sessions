@@ -2,7 +2,7 @@
 
 **Design stage:** confirmed working graph; evidence-gated and revisable  
 **Learning phase:** Phase 0 — ML/JAX experimental foundations  
-**Active frontier:** encode J1 `jit`/`vmap` constraints, then fade the scaffold on F1/F4/J2/J3 and E1–E3/T0 through independent changed-surface implementation and diagnosis.
+**Active frontier:** encode J1 `jit`/`vmap` constraints, then run an independence probe (protocol in [`AGENTS.md`](AGENTS.md)) to fade the scaffold on F1/F4/J2/J3 and E1–E3/T0.
 
 The canonical vocabulary is defined in [`CONTEXT.md`](CONTEXT.md). This document records capability prerequisites separately from teaching-order preferences and milestone integration requirements.
 
@@ -77,7 +77,6 @@ flowchart TD
   E1 --> T0
   E2 --> T0
   E3 --> T0
-  L1 --> T0
 
   C1 --> C3["C3 Feedback control"]
   C2 --> C3
@@ -164,7 +163,7 @@ flowchart TD
 | J3 | Functional parameters, loss, gradients, update, batches | procedural | F4, J2 | **Fluency** | Every learned policy and reproduction | `scaffolded` |
 | J4 | Unit/property tests, seeds, checkpoints, configs | procedural | J1, J3 | Familiarity → fluency | Reproduce experiment runs | `scaffolded` for tests/seeds; remaining surface `not-assessed` |
 | E1 | Split unit, leakage, preprocessing, lineage | conceptual + procedural | — | **Fluency** for split-before-fit | Every dataset and policy-training run | `scaffolded` |
-| E2 | Metrics, uncertainty, success and safety criteria | conceptual + discriminative | F3 | Familiarity → fluency in selection | Metric defence; intervals; failure slices | `scaffolded` for imbalanced binary classification |
+| E2 | Metrics, uncertainty, success and safety criteria | conceptual + discriminative | F3 *(uncertainty surface only; metric selection does not depend on it)* | Familiarity → fluency in selection | Metric defence; intervals; failure slices | `scaffolded` for metric selection under binary class imbalance; `not-assessed` for uncertainty — no interval has been computed |
 | E3 | Baselines, ablations, error analysis, records | whole-task | E1, E2, J4 | Fluency for minimum experiment template | All whole-task reports | `scaffolded` |
 
 | C1 | Frames, forward/differential kinematics, workspace, action conventions | conceptual + procedural | F1 | Familiarity → fluency for frame transforms | Calibration and simulator interface design | `not-encoded` |
@@ -182,12 +181,21 @@ flowchart TD
 | L5 | Training and rollout diagnosis | perceptual-discriminative + whole-task | E3 and at least one of L2/L4; L3 for vision diagnosis | **Fluency** in failure classification | Curated failure log and ablations | `not-assessed` |
 | X1 | Analyse mechanism, assumptions, load-bearing claims | conceptual + discriminative | F2–F5, C4, L4 | Familiarity → independent | Explain component before reproducing | `not-encoded` |
 | X2 | Reimplement and ablate a paper mechanism in JAX | whole-task | X1, J3, E3 | Independent | Reproduction and benchmark comparison | `not-assessed` |
-| T0 | Leakage-safe tabular baseline | whole-task | J3, E1–E3, L1 | Independent with checklist | Retrieves Phase 0 nodes | `scaffolded` narrow vertical slice |
+| T0 | Leakage-safe tabular baseline | whole-task | J3, E1–E3 (L1 is an integration requirement of the Phase 0 exit gate, not a prerequisite of every attempt) | Independent with checklist | Retrieves Phase 0 nodes | `scaffolded` narrow vertical slice; the slice was separable at a 1.0 ceiling, so it did not discriminate metric, slice, or leakage faults |
 | T1 | State-based simulated control with scripted baseline | whole-task | C1–C3, S1 | Independent with scaffolded task definition | Retrieves control, simulation, metrics | `not-assessed` |
 | T2 | Demonstration-trained policy | whole-task | L2, E3 | Independent with fading scaffold | Retrieves data, JAX, rollouts | `not-assessed` |
 | T3A | Shifted-condition policy transfer | whole-task | L5 and at least one of R1/T2; L3 for vision route | Independent transfer | Changed environment, observations, or requirements | `not-assessed` |
 | T3B | Paper reproduction and ablation under changed conditions | whole-task | X2, L5 | Independent transfer | Benchmark discrepancy and ablation | `not-assessed` |
 | T4 | SO-101 deployment or evidenced blocker report | whole-task | T3A, T3B, S3 | Independent, safety-gated | Full-system retrieval under constraints | `not-assessed` |
+
+## Integration requirements
+
+Integration requirements are not prerequisite edges. They name capabilities that must be combined in a milestone, and they are checked at an exit gate rather than before every attempt on the node.
+
+| Milestone | Integration requirement | Rationale |
+|---|---|---|
+| Phase 0 exit project | L1 — the exit project compares the linear baseline against a learned non-linear baseline under the same split, metric, and seed protocol | The narrow tabular slice used a linear model and never exercised L1. Holding L1 as a prerequisite of every T0 attempt produced a `scaffolded` node above a `not-assessed` prerequisite. |
+| Phase 0 exit project | F3 — the primary metric is reported with an uncertainty interval | E2's uncertainty surface is the part that genuinely depends on F3, and it remains unevidenced. |
 
 ## Recognition-level leaves
 

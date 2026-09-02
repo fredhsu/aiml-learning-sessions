@@ -126,13 +126,13 @@ These connections will appear in later sessions:
 
 ## References
 
-- [[Week11_S1_ImplicitBias_Math]] — the row-space theorem
+- [[w11s1-implicit-bias-math]] — the row-space theorem
 
-- [[Week11_S2_ImplicitBias_Code]] — numerical verification, including Adam's deviation
+- [[w11s2-implicit-bias-code]] — numerical verification, including Adam's deviation
 
-- [[Week5_S1_GD_Euclidean]] — GD as steepest descent under Euclidean metric
+- [[w5s1-gd-euclidean]] — GD as steepest descent under Euclidean metric
 
-- [[Week9_S4_OptimizerCheatSheet]] — Adam's per-coordinate rescaling
+- [[w9s4-optimizer-cheat-sheet]] — Adam's per-coordinate rescaling
 
 - Zhang et al., 2017 — _Understanding Deep Learning Requires Rethinking Generalization_, arXiv:1611.03530
 

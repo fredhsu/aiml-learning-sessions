@@ -63,4 +63,4 @@ Since we use a weighted average for attention it is permutation-equivariant, so 
 
 - How does Vision Transformers handle 2D positional encoding? Does the linear-offset / relative-position structure survive two axes, or does ViT just learn it?
 - Does multi-head relate to conv-channels?
-- Residual connections in the transformer → [[w10S3_Read_Landscape]] — skip connections and loss-landscape smoothing
+- Residual connections in the transformer → [[w10s3-read-landscape]] — skip connections and loss-landscape smoothing

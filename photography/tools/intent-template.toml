@@ -1,0 +1,123 @@
+# Shot-intent record for one outing.
+#
+# Copy to shoots/YYYY-MM-DD-<place>/intent.toml. Fill [outing] BEFORE leaving,
+# and one [[frame]] block BEFORE each release. A frame with no recorded intent
+# is exposure, not evidence: it may be discussed but never culled, scored, or
+# used to advance a node.
+#
+# Verify with:  python3 tools/verify_shot.py shoots/<outing>/intent.toml
+
+[outing]
+name = "riverside footpath"
+date = "2026-08-30"
+phase = 1
+# The single variable held constant for the whole outing. One only.
+constraint = "35mm equivalent, aperture priority, no crops in development"
+# Sensor format drives depth-of-field and shake arithmetic:
+# full-frame | aps-c | aps-c-canon | mft | 1-inch | phone
+sensor = "aps-c"
+# Stops of stabilisation you are claiming for the shake convention. 0 if none.
+stabilisation_stops = 0
+# How close a shot setting must be to its prediction to pass, in stops.
+tolerance_stops = 0.34
+# Committed BEFORE shooting. This is the calibration measurement; changing it
+# afterwards destroys the only high-integrity number in the perceptual half.
+predicted_keeper_rate = 40
+predicted_dominant_error_code = "P"
+# Travel-story contract. Declare the outing's story question and the roles needed;
+# these guide coverage but do not force one frame of every type into the final edit.
+story_question = "how the river path changes as commuters take over at dusk"
+coverage_roles_needed = ["orientation", "context", "human", "detail", "transition", "closure"]
+opportunity_minutes = 60
+return_possible = false
+# Field-readiness and data-stewardship commitments are checked at outing close.
+carry_weight_limit_kg = 2.0
+first_frame_target_minutes = 5
+backup_plan = "laptop plus encrypted portable SSD before card reuse"
+# Optional outing-wide ISO ceiling; individual frames may override.
+iso_ceiling = 3200
+
+
+# ---------------------------------------------------------------------------
+# One block per frame or per tight group of frames. Written before release.
+# ---------------------------------------------------------------------------
+
+[[frame]]
+file = "DSCF1042.RAF"
+# A group intent may cover a burst or unfolding action only while subject/relationship,
+# light, position/technical strategy, and the declared stop condition remain unchanged.
+group_id = "bridge-walkers-01"
+intent_committed_at = "2026-08-30T18:04:00-07:00"
+stop_condition = "either walker leaves the shadow line or my camera position changes"
+# One clause. If it takes two, you have not decided what the picture is about.
+subject = "the gap between the two walkers as they pass under the bridge"
+# Why this is a picture at all -- what makes it worth the frame.
+why = "the shadow line splits them exactly at the moment they are level"
+light = "hard low sun, side-lit from camera left, roughly 4:1 on the faces"
+# orientation | context | human | detail | transition | closure | standalone
+coverage_role = "human"
+# public-unobtrusive | explicit-consent | no-identifiable-person | not-applicable
+ethical_access = "public-unobtrusive"
+
+predicted_aperture = 5.6
+predicted_shutter = 0.002        # seconds; 1/500
+predicted_iso = 400
+
+# shallow | deep | range
+depth_intent = "range"
+subject_distance_m = 8
+near_limit_m = 6
+far_limit_m = 12
+
+# freeze | blur
+motion_intent = "freeze"
+# static | slow | moderate | fast  -- sets the freeze threshold
+subject_motion = "slow"
+tripod = false
+
+# protect-highlights | protect-shadows | full-range
+exposure_intent = "protect-highlights"
+max_clipped_highlight_pct = 0.5
+
+
+[[frame]]
+file = "DSCF1051.RAF"
+group_id = "underpass-cyclist-01"
+intent_committed_at = "2026-08-30T18:19:00-07:00"
+stop_condition = "the cyclist exits the wet-wall background or the light changes"
+subject = "the cyclist against the wet underpass wall"
+why = "the wall's texture only reads while it is still wet"
+light = "open shade, flat, cool cast from the sky"
+coverage_role = "transition"
+ethical_access = "public-unobtrusive"
+
+predicted_aperture = 2.8
+predicted_shutter = 0.033        # seconds; 1/30
+predicted_iso = 1600
+
+depth_intent = "shallow"
+subject_distance_m = 3
+max_depth_m = 0.6
+
+motion_intent = "blur"
+blur_slower_than = 60            # must be slower than 1/60
+subject_motion = "moderate"
+tripod = false
+
+exposure_intent = "full-range"
+iso_ceiling = 6400               # overrides the outing ceiling for this frame
+
+
+# ---------------------------------------------------------------------------
+# Field reference -- what each check settles
+# ---------------------------------------------------------------------------
+#
+# settings.*   predicted vs actual aperture/shutter/ISO, in stops
+# depth        computed depth of field vs the declared depth intent
+# motion.shake shutter vs the reciprocal-of-equivalent-focal-length convention
+# motion.subject shutter vs the declared freeze or blur intent
+# exposure     measured clipping vs the declared exposure placement
+# iso_ceiling  actual ISO vs the ceiling you declared before shooting
+#
+# The harness settles technical questions only. Whether the picture works is
+# decided through rubrics/image-critique-rubric.md, and never here.

@@ -56,7 +56,7 @@ Writing $M = W_Q^\top W_K$, the score is a **bilinear form** — linear in each 
 
 This is where the metric thread arrives. In previous weeks the metric was taken as *given* and we asked what followed from it: the gradient as a covector under the Euclidean metric (Week 4), each optimizer as a different metric on parameter space (Weeks 7–9), the min-norm solution depending on the Euclidean inner product in two places (Week 11). Here the network **learns** $M$ from data. Same structure — an inner product decides what counts as "similar" — but the metric is no longer fixed to the identity.
 
-Cross-links: [[Week4_Linear_Maps]] · [[Week5_S1_GD_Euclidean]]
+Cross-links: [[w4s1-gradients-levelsets]] · [[w5s1-gd-euclidean]]
 
 ## Asymmetry reason for separate Q/K
 
@@ -96,4 +96,4 @@ Three gaps surfaced between the cold reconstruction and the finished derivation.
 
 - **S2:** implement `scaled_dot_product_attention`; the three "things to watch" above are the assertions.
 - **S3:** pre-reading conjecture is now committed — *Q/K build the addressing metric, V is the content being addressed.* Test it against Vaswani, and check whether the paper's $\sqrt{d_k}$ justification matches the derivation above.
-- **S4:** the bilinear-form section is the spine of the explainer. Forward to [[Week12_Conv_Explainer]] — conv hard-codes connectivity, attention learns it.
+- **S4:** the bilinear-form section is the spine of the explainer. Forward to [[w12s4-conv-explainer]] — conv hard-codes connectivity, attention learns it.

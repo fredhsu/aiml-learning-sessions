@@ -38,4 +38,4 @@ Generally preconditioning the gradient step can be seen as multiplying a matrix 
 
 ## The metric thread
 
-Going from SGD -> Momentum -> Adam can be seen as progressively adding richer preconditioning adjustments to the past choice to adjust for poorly conditioned loss landscapes [[Week5_S1]].
+Going from SGD -> Momentum -> Adam can be seen as progressively adding richer preconditioning adjustments to the past choice to adjust for poorly conditioned loss landscapes [[w5s1-gd-euclidean]].

@@ -1,0 +1,34 @@
+# Environment for the inference-engineering curriculum.
+#
+# NOT YET SYNCED. `uv sync` has not been run and no lock file exists; the first
+# session establishes the environment and records the resolved versions, which
+# then become part of every workload contract.
+#
+# Version floors are deliberately loose. The exact resolved versions matter far
+# more than the declared ones here, because they belong in the contract.
+
+[project]
+name = "inference-engineering"
+version = "0.1.0"
+description = "Evidence-adaptive inference-engineering curriculum: harness, from-scratch engine, and measurement records"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch>=2.6",
+    "transformers>=4.48",
+    "accelerate>=1.0",
+    "numpy>=1.26",
+    "pytest>=8.0",
+]
+
+# Optional. Installed when the phase needs them, not before.
+[dependency-groups]
+# Phase 2+: the production engine used as the comparison channel.
+serve = ["vllm"]
+# Phase 0+: an independent benchmarking harness to cross-check your own.
+bench = ["guidellm"]
+# Phase 3+: quantised checkpoint production.
+quant = ["llmcompressor"]
+
+[tool.pytest.ini_options]
+testpaths = ["."]
+addopts = "-q"
