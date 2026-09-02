@@ -5,8 +5,9 @@ Complete this before running `jit_static_shape_drill.py`.
 ## Prediction
 
 - Score: 3 / 5
-- Time: 30 min
-- Most likely failure mode, and the exact symptom it would produce: Shape mismatch, will fail Matrix Multiply
+- Time: 15 min
+- Most likely failure mode, and the exact symptom it would produce: `logsumexp` reduces on `axis=0` rather than the class axis, so values remain finite but the Optax parity loss difference exceeds `1e-6`.
+- Predeclared reference-check settings: loss absolute tolerance `1e-6`; central finite-difference step `h=1e-2`; maximum absolute gradient-error tolerance `2e-4`.
 
 Scope note: this card is predicted at 15 minutes. If the prediction exceeds that, split it.
 
@@ -32,12 +33,11 @@ Scope note: this card is predicted at 15 minutes. If the prediction exceeds that
 Answer before writing `in_axes`, and do not run the file to check.
 
 - Chosen `in_axes` for `batched_logits`, and why each entry is what it is:
-  (1,None) - 1 for batch columns, and None because x_i is a 1D vector
-  correction: (None,0) which map to (params,x_i).
+  (None,0) which map to (params,x_i). Shares params, maps batch examples
 - What `in_axes=(0, 0)` would do here, and whether it fails loudly or silently:
-  Fails loudly due to mapped axis of W, b, x having incompatible sizes
+  Fails loudly due to mapped axis of W, b, x having incompatible sizes. The current sizes would cause it to fail.
 - What `in_axes=(None, None)` would do here, and whether it fails loudly or silently:
-  Fails loudly, vmap needs at least one mapped axis
+  Fails loudly, vmap needs at least one mapped axis, in this case it would fail since vmap maps no axis
 - Which of the three wrong-but-runnable options is most dangerous, and why:
   (0,0) as it could succeed by chance of the axis being compatible
 

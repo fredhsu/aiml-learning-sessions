@@ -7,6 +7,7 @@ Do not inspect earlier classifier implementations.
 import jax
 from jax.errors import ConcretizationTypeError
 import jax.numpy as jnp
+import optax
 
 B, D, C = 5, 3, 4
 
@@ -97,12 +98,29 @@ def main():
         count = bad_unique_count(y)
     except ConcretizationTypeError as e:
         print(f"An ConcretizationTypeError occurred: {e}")
-    # TODO: independent reference check — the tutor authored the task and the
-    #       tests, so neither is external evidence. Compare stable_loss against
-    #       optax.softmax_cross_entropy_with_integer_labels (mean-reduced), and
-    #       compare grads["W"] against a central finite-difference estimate.
-    #       Print both max absolute differences. Predict each before running.
-    # ! I don't know how to use optax.softmax_cross_entropy_with_integer_labels
+
+    optax_loss = jnp.mean(optax.softmax_cross_entropy_with_integer_labels(logits, y))
+    loss_difference = jnp.abs(loss - optax_loss)
+    assert loss_difference <= 1e-6
+    # central differences for every W[i,j] using h=1e-2
+    h = 1e-2
+    fd_grads_W = zeros_like(params["W"])
+    for i in range(params["W"].shape[0]):
+        for j in range(params["W"].shape[1]):
+            e = jnp.zeros_like(params["W"])
+            e = e.at[i, j].set(1.0)
+            he = h * e
+            p1 = {"W": params["W"] + he, "b": params["b"]}
+            l1 = stable_loss(p1, x, y)
+            p2 = {"W": params["W"] - he, "b": params["b"]}
+            l2 = stable_loss(p2, x, y)
+            fd_grads_W = fd_grads_W.at[i, j].set((l1 - l2) / (2 * h))
+
+    max_diff = jnp.max(jnp.abs(grads["W"] - fd_grads_W))
+    # compare resulting (D,C) matrix to grads['W']
+    # print both max diff and assert tolerance
+    print(f"loss difference: {loss_difference}, max diff: {max_diff}")
+    assert bool(max_diff <= 2e-4)
 
 
 if __name__ == "__main__":
